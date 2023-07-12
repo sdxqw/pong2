@@ -14,7 +14,7 @@ import static io.github.sdxqw.pong2.PongGame.WINDOW_WIDTH;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_BASELINE;
 
 public class PauseState extends GameState {
-    public final List<Button> buttons;
+    private final List<Button> buttons;
     private final PlayState playState;
     private final Button resumeButton;
     private final Button exitButton;

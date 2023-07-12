@@ -6,6 +6,7 @@ group = 'io.github.sdxqw'
 version = '1.0-SNAPSHOT'
 
 project.ext.lwjglVersion = "3.3.2"
+project.ext.jomlVersion = "1.10.5"
 project.ext.lwjglNatives = "natives-windows"
 
 repositories {
@@ -15,6 +16,7 @@ repositories {
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
+    implementation "org.joml:joml:${jomlVersion}"
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-assimp"
     implementation "org.lwjgl:lwjgl-bgfx"

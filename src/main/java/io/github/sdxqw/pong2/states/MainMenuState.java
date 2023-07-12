@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.github.sdxqw.pong2.PongGame.WINDOW_HEIGHT;
+import static io.github.sdxqw.pong2.PongGame.WINDOW_WIDTH;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_BASELINE;
 
 public class MainMenuState extends GameState {
@@ -26,8 +27,8 @@ public class MainMenuState extends GameState {
         font = new Font(game.vg, "pixel");
         buttons = new ArrayList<>();
         playState = new PlayState(game);
-        startButton = new Button(0, (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 - 50, 200, 80, "Start", 30);
-        exitButton = new Button(1, (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 60, 200, 80, "Exit", 18);
+        startButton = new Button(0, (float) WINDOW_WIDTH / 2, (float) WINDOW_HEIGHT / 2 - 50, 200, 80, "Start", 30);
+        exitButton = new Button(1, (float) WINDOW_WIDTH / 2, (float) WINDOW_HEIGHT / 2 + 60, 200, 80, "Exit", 18);
         startButton.setOnActivated(this::startGame);
         exitButton.setOnActivated(game::endGame);
         buttons.add(startButton);

@@ -1,7 +1,8 @@
 package io.github.sdxqw.pong2.rendering;
 
-import io.github.sdxqw.pong2.enitity.Ball;
-import io.github.sdxqw.pong2.enitity.Paddle;
+import io.github.sdxqw.pong2.entity.Ball;
+import io.github.sdxqw.pong2.entity.Paddle;
+import org.joml.Vector2f;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
 
@@ -32,14 +33,14 @@ public class Rendering {
     }
 
     public void renderPaddle(long vg, Paddle paddle) {
-        drawEntity(vg, paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight());
+        drawEntity(vg, paddle.getPosition(), paddle.getWidth(), paddle.getHeight());
     }
 
     public void renderBall(long vg, Ball ball) {
-        drawEntity(vg, ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight());
+        drawEntity(vg, ball.getPosition(), ball.getWidth(), ball.getHeight());
     }
 
-    private void drawEntity(long vg, float x, float y, float width, float height) {
+    private void drawEntity(long vg, Vector2f position, float width, float height) {
         NVGColor color = NVGColor.create();
         color.r(1f);
         color.g(1f);
@@ -47,7 +48,7 @@ public class Rendering {
         color.a(1f);
 
         NanoVG.nvgBeginPath(vg);
-        NanoVG.nvgRect(vg, x, y, width, height);
+        NanoVG.nvgRect(vg, position.x, position.y, width, height);
         NanoVG.nvgFillColor(vg, color);
         NanoVG.nvgFill(vg);
     }

@@ -1,12 +1,13 @@
 package io.github.sdxqw.pong2.states;
 
 import io.github.sdxqw.pong2.PongGame;
-import io.github.sdxqw.pong2.enitity.Ball;
-import io.github.sdxqw.pong2.enitity.Paddle;
+import io.github.sdxqw.pong2.entity.Ball;
+import io.github.sdxqw.pong2.entity.Paddle;
 import io.github.sdxqw.pong2.rendering.Rendering;
 import io.github.sdxqw.pong2.utils.Utils;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_RIGHT;
 
 public class PlayState extends GameState {
     public final Ball ball;
@@ -17,7 +18,7 @@ public class PlayState extends GameState {
         super(game);
         player1 = new Paddle(game.window);
         player2 = new Paddle(game.window);
-        player2.setX(PongGame.WINDOW_WIDTH - player2.getWidth() - player2.getX());
+        player2.getPosition().x = PongGame.WINDOW_WIDTH - player2.getWidth() - player2.getPosition().x;
         ball = new Ball(PongGame.WINDOW_WIDTH, PongGame.WINDOW_HEIGHT, player1, player2, game.score);
     }
 
@@ -28,7 +29,7 @@ public class PlayState extends GameState {
         renderer.renderBall(vg, ball);
 
         game.font.drawText("Player 1: " + game.score.getPlayer1Score(), NVG_ALIGN_LEFT, 25, 20, 22, Utils.color(1f, 1f, 1f, 1f));
-        game.font.drawText("Player 2: " + game.score.getPlayer2Score(), NVG_ALIGN_RIGHT,25, 20, 22, Utils.color(1f, 1f, 1f, 1f));
+        game.font.drawText("Player 2: " + game.score.getPlayer2Score(), NVG_ALIGN_RIGHT, 25, 20, 22, Utils.color(1f, 1f, 1f, 1f));
     }
 
     @Override

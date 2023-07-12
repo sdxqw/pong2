@@ -28,6 +28,8 @@ dependencies {
     implementation "org.lwjgl:lwjgl-par"
     implementation "org.lwjgl:lwjgl-stb"
     implementation "org.lwjgl:lwjgl-vulkan"
+    implementation "com.google.code.gson:gson:2.8.9"
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
     implementation 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"

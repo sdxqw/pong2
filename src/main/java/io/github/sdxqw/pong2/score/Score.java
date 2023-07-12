@@ -1,6 +1,11 @@
 package io.github.sdxqw.pong2.score;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Score {
+    public int highestScore;
+    public List<Integer> scores = new ArrayList<>();
     private int player1Score;
     private int player2Score;
 
@@ -24,4 +29,24 @@ public class Score {
     public int getPlayer2Score() {
         return player2Score;
     }
+
+    public void resetScore() {
+        player1Score = 0;
+        player2Score = 0;
+    }
+
+    // get the highest score from the list from teh player1
+    public int getHighest() {
+        if (scores.isEmpty()) {
+            return 0;
+        }
+        int highest = scores.get(0);
+        for (int score : scores) {
+            if (score > highest) {
+                highest = score;
+            }
+        }
+        return highest;
+    }
+
 }

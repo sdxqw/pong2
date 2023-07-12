@@ -61,7 +61,7 @@ public class Ball {
             }
 
             position = newPosition;
-            incrementSpeed();
+            incrementSpeed(0);
         }
     }
 
@@ -69,8 +69,10 @@ public class Ball {
         speed = 150f;
     }
 
-    public void incrementSpeed() {
-        speed += 0.01f;
+    public void incrementSpeed(float typeSpeed) {
+        if (typeSpeed != 0)
+            speed += typeSpeed;
+        else speed += 0.1f;
     }
 
     private Vector2f calculateNewPosition(double deltaTime) {

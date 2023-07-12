@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
+import static io.github.sdxqw.pong2.PongGame.WINDOW_WIDTH;
+
 @Getter
 public class Paddle {
     private final float width;
@@ -15,12 +17,12 @@ public class Paddle {
     @Setter
     private Vector2f position;
 
-    public Paddle(long window) {
+    public Paddle(InputManager inputManager) {
         this.position = new Vector2f(20, 50);
         this.width = 20;
         this.height = 150;
         this.speed = 350f;
-        this.inputManager = new InputManager(window);
+        this.inputManager = inputManager;
     }
 
     public void movePaddle(float windowHeight, double deltaTime) {
@@ -39,9 +41,9 @@ public class Paddle {
         ballCenterY += errorOffset;
         float maxMovementSpeed = (float) (speed * deltaTime * 0.7f);
 
-        if (paddleCenterY < ballCenterY &&  position.y + height + maxMovementSpeed < windowHeight) {
+        if (paddleCenterY < ballCenterY && position.y + height + maxMovementSpeed < windowHeight) {
             position.y += Math.min(maxMovementSpeed, ballCenterY - paddleCenterY);
-        } else if (paddleCenterY > ballCenterY &&  position.y - maxMovementSpeed > 0) {
+        } else if (paddleCenterY > ballCenterY && position.y - maxMovementSpeed > 0) {
             position.y -= Math.min(maxMovementSpeed, paddleCenterY - ballCenterY);
         }
     }
@@ -52,6 +54,16 @@ public class Paddle {
         float paddleRight = position.x + width;
         float paddleBottom = position.y + height;
 
-        return  position.x < ballRight && paddleRight > ballX && position.y < ballBottom && paddleBottom > ballY;
+        return position.x < ballRight && paddleRight > ballX && position.y < ballBottom && paddleBottom > ballY;
+    }
+
+    public void resetPlayerPosition() {
+        position.x = 20;
+        position.y = 50;
+    }
+
+    public void resetBotPosition() {
+        position.x = WINDOW_WIDTH - getWidth() - 20;
+        position.y = 50;
     }
 }

@@ -7,8 +7,7 @@ import org.lwjgl.nanovg.NanoVG;
 import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_BASELINE;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_BOTTOM;
+import static org.lwjgl.nanovg.NanoVG.*;
 
 public class Button {
     public float x;
@@ -34,9 +33,10 @@ public class Button {
     }
 
     public void renderButton(long vg, Font fontManager) {
-        float x0 = x;
+        float x0 = x - width / 2;
         float y0 = y;
-        float textX = x + width / 2 - fontManager.measureTextWidth(text, fontSize) / 2;
+        float textWidth = fontManager.measureTextWidth(text, fontSize);
+        float textX = x - textWidth / 2 + width / 2;
         float textY = y + height / 2 + (fontSize >> 1) + 5;
 
         NanoVG.nvgBeginPath(vg);
@@ -44,21 +44,13 @@ public class Button {
         NanoVG.nvgFillColor(vg, Utils.color(0.2f, 0.2f, 0.2f, 1.0f));
 
         if (selectedButtonIndex == id) {
-            float lineY = textY + (fontSize >> 1) + 2;
-            float lineWidth = fontManager.measureTextWidth(text, fontSize);
-
-            NanoVG.nvgBeginPath(vg);
-            NanoVG.nvgMoveTo(vg, textX, lineY);
-            NanoVG.nvgLineTo(vg, textX + lineWidth, lineY);
-            NanoVG.nvgStrokeColor(vg, Utils.color(0.4f, 0.4f, 0.4f, 1.0f));
-            NanoVG.nvgStrokeWidth(vg, 5.0f);
-            NanoVG.nvgStroke(vg);
-
-            fontManager.drawText(text, NVG_ALIGN_BOTTOM, textX, textY, fontSize, Utils.color(1.0f, 1.0f, 1.0f, 1.0f));
+            fontManager.drawText("> " + text, NVG_ALIGN_BOTTOM | NVG_ALIGN_MIDDLE, textX, textY, fontSize, Utils.color(1.0f, 1.0f, 1.0f, 1.0f));
         } else {
-            fontManager.drawText(text, NVG_ALIGN_BASELINE, textX, textY, fontSize, Utils.color(0.6f, 0.6f, 0.6f, 1.0f));
+            fontManager.drawText(text, NVG_ALIGN_BOTTOM | NVG_ALIGN_MIDDLE, textX, textY, fontSize, Utils.color(0.6f, 0.6f, 0.6f, 1.0f));
         }
+
     }
+
 
     public void setOnActivated(Runnable onActivated) {
         this.onActivated = onActivated;

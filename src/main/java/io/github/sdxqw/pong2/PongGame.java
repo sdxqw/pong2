@@ -1,17 +1,19 @@
 package io.github.sdxqw.pong2;
 
+import io.github.sdxqw.pong2.data.UserData;
 import io.github.sdxqw.pong2.font.Font;
+import io.github.sdxqw.pong2.input.InputManager;
 import io.github.sdxqw.pong2.rendering.FPS;
 import io.github.sdxqw.pong2.rendering.Rendering;
 import io.github.sdxqw.pong2.score.Score;
-import io.github.sdxqw.pong2.states.GameState;
-import io.github.sdxqw.pong2.states.MainMenuState;
-import io.github.sdxqw.pong2.states.PauseState;
-import io.github.sdxqw.pong2.states.PlayState;
+import io.github.sdxqw.pong2.server.PongServer;
+import io.github.sdxqw.pong2.states.*;
 import io.github.sdxqw.pong2.utils.Utils;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+
+import java.util.UUID;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nanovg.NanoVG.*;
@@ -24,21 +26,25 @@ public class PongGame {
     public static final int WINDOW_HEIGHT = 720;
     private static final String WINDOW_TITLE = "Pong 2";
 
+    public String userName = "User";
+
     public long window;
     public long vg;
-
-    private Rendering renderer;
     public Font font;
+    public Score score;
+    public InputManager inputManager;
+    public boolean isGamePaused = false;
+    public boolean showPauseMenu = true;
+    public PongServer server;
+    private Rendering renderer;
     private GameState currentState;
     private FPS fpsCounter;
-    public Score score;
+    private UserData userData;
 
-    public boolean isGamePaused = false;
     private boolean isGameRunning = false;
-
+    private boolean showFPS = true;
 
     private double lastTime;
-
 
     public void startGame() {
         initGame();
@@ -88,6 +94,22 @@ public class PongGame {
             fpsCounter = new FPS(0.5f);
             renderer = new Rendering();
             font = new Font(vg, "pixel");
+            inputManager = new InputManager(window);
+
+            server = new PongServer();
+            userData = new UserData();
+
+            userData.loadSessionID();
+
+            if (userData.getSessionID() != null) {
+                // Load existing session from database using session ID
+                server.loadSessionFromDatabase(this, userData.getSessionID());
+            } else {
+                // Generate new session ID
+                UUID sessionID = UUID.randomUUID();
+                userData.setSessionID(sessionID);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -120,8 +142,10 @@ public class PongGame {
 
         currentState.render(renderer, vg);
 
-        String fps = String.format("FPS: %.0f", fpsCounter.getFPS());
-        font.drawText(fps, NVG_ALIGN_BASELINE, WINDOW_HEIGHT - 15, 25, 22, Utils.color(1f, 1f, 1f, 1f));
+        if (showFPS) {
+            String fps = String.format("FPS: %.0f", fpsCounter.getFPS());
+            font.drawText(fps, NVG_ALIGN_BASELINE, 15, WINDOW_HEIGHT - 20, 22, Utils.color(1f, 1f, 1f, 0.2f));
+        }
 
         nvgEndFrame(vg);
         glDisable(GL_BLEND);
@@ -134,33 +158,47 @@ public class PongGame {
 
     private void setupCallbacks() {
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (currentState instanceof MainMenuState) {
+            if (currentState instanceof MainMenuState)
                 ((MainMenuState) currentState).onKeyPressed(key, action);
-            }
 
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-                if (!(currentState instanceof PauseState) && !(currentState instanceof MainMenuState)) {
+            if (inputManager.isKeyPressed(GLFW_KEY_ESCAPE)) {
+                if (!(currentState instanceof PauseState) && !(currentState instanceof MainMenuState)
+                        && !(currentState instanceof KeyListState) && !(currentState instanceof TopListState) && showPauseMenu) {
                     isGamePaused = true;
                     changeState(new PauseState(this, (PlayState) currentState));
                 }
+
+                if (currentState instanceof KeyListState)
+                    changeState(new MainMenuState(this));
+
+                if (currentState instanceof TopListState)
+                    changeState(new MainMenuState(this));
             }
 
-            if (currentState instanceof PauseState) {
+            if (currentState instanceof PauseState)
                 ((PauseState) currentState).onKeyPressed(key, action);
-            }
 
-            if (key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE && currentState instanceof PlayState) {
-                ((PlayState) currentState).ball.incrementSpeed();
-            }
+            if (inputManager.isKeyPressed(GLFW_KEY_LEFT_SHIFT) && currentState instanceof PlayState)
+                ((PlayState) currentState).ball.incrementSpeed(2f);
 
-            if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS && currentState instanceof PlayState) {
+            if (inputManager.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && currentState instanceof PlayState)
                 ((PlayState) currentState).ball.resetSpeed();
-            }
+
+            if (inputManager.isKeyPressed(GLFW_KEY_L))
+                showFPS = !showFPS;
         });
     }
 
     public void endGame() {
         isGameRunning = false;
+
+        // Save session ID to JSON
+        userData.saveSessionID();
+
+        // Save session data to the database
+        server.saveSessionToDatabase(userName, score, userData.getSessionID());
+
+        server.closeConnection();
         Callbacks.glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         nvgDelete(vg);
@@ -169,6 +207,7 @@ public class PongGame {
         vg = NULL;
         System.exit(0);
     }
+
 
     public void changeState(GameState nextState) {
         currentState = nextState;

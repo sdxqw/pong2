@@ -7,10 +7,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 public class UserData {
-    private static final String SESSION_FILE_PATH = "session.json";
+    private static final String APP_DIR = System.getProperty("user.home") + File.separator + "pong2-dir";
+    private static final String SESSION_FILE_PATH = APP_DIR + File.separator + "session.json";
     private UUID sessionID;
 
     public void loadSessionID() {
@@ -22,6 +26,9 @@ public class UserData {
                 UserData userData = gson.fromJson(reader, UserData.class);
                 this.sessionID = userData.getSessionID();
                 reader.close();
+            } else {
+                createNewSessionID(); // Create a new session ID if the file doesn't exist
+                saveSessionID(); // Save the new session ID to the JSON file
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -30,6 +37,7 @@ public class UserData {
 
     public void saveSessionID() {
         try {
+            createAppDirIfNotExists();
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             FileWriter writer = new FileWriter(SESSION_FILE_PATH);
             gson.toJson(this, writer);
@@ -37,6 +45,17 @@ public class UserData {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createAppDirIfNotExists() throws IOException {
+        Path appDirPath = Paths.get(APP_DIR);
+        if (!Files.exists(appDirPath)) {
+            Files.createDirectories(appDirPath);
+        }
+    }
+
+    private void createNewSessionID() {
+        sessionID = UUID.randomUUID();
     }
 
     public UUID getSessionID() {

@@ -110,7 +110,8 @@ public class PongGame {
             });
             loadDataThread.start();
 
-            GLFWImage.Buffer iconBuffer = loadImage("/textures/image/icon.png");
+
+            GLFWImage.Buffer iconBuffer = loadImage("textures/image/icon.png");
             glfwSetWindowIcon(window, iconBuffer);
 
             // Load other resources such as images and fonts here

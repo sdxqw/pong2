@@ -1,10 +1,9 @@
 package io.github.sdxqw.pong2.entity;
 
-import io.github.sdxqw.pong2.input.InputManager;
+import io.github.sdxqw.pong2.PongGame;
 import lombok.Getter;
 import lombok.Setter;
 import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
 
 import static io.github.sdxqw.pong2.PongGame.WINDOW_WIDTH;
 
@@ -13,23 +12,23 @@ public class Paddle {
     private final float width;
     private final float height;
     private final float speed;
-    private final InputManager inputManager;
+    private final PongGame game;
     @Setter
     private Vector2f position;
 
-    public Paddle(InputManager inputManager) {
+    public Paddle(PongGame game) {
         this.position = new Vector2f(20, 50);
         this.width = 20;
         this.height = 150;
         this.speed = 350f;
-        this.inputManager = inputManager;
+        this.game = game;
     }
 
     public void movePaddle(float windowHeight, double deltaTime) {
-        if (inputManager.isKeyPressed(GLFW.GLFW_KEY_W) && position.y > 0) {
+        if (game.inputManager.isKeyPressed(game.keyListState.getValueByIndex(4)) && position.y > 0) {
             position.y -= speed * deltaTime;
         }
-        if (inputManager.isKeyPressed(GLFW.GLFW_KEY_S) && position.y + height < windowHeight) {
+        if (game.inputManager.isKeyPressed(game.keyListState.getValueByIndex(5)) && position.y + height < windowHeight) {
             position.y += speed * deltaTime;
         }
     }

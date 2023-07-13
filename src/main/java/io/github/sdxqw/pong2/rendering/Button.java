@@ -1,13 +1,15 @@
 package io.github.sdxqw.pong2.rendering;
 
+import io.github.sdxqw.pong2.PongGame;
 import io.github.sdxqw.pong2.font.Font;
 import io.github.sdxqw.pong2.utils.Utils;
 import org.lwjgl.nanovg.NanoVG;
 
 import java.util.List;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_BOTTOM;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 public class Button {
     public float x;
@@ -20,8 +22,10 @@ public class Button {
     public String text;
     private int selectedButtonIndex;
     private Runnable onActivated;
+    private final PongGame game;
 
-    public Button(int id, float x, float y, float width, float height, String text, int fontSize) {
+    public Button(PongGame game, int id, float x, float y, float width, float height, String text, int fontSize) {
+        this.game = game;
         this.id = id;
         this.x = x;
         this.y = y;
@@ -59,11 +63,11 @@ public class Button {
     public void onKeyPressed(int key, int action, List<Button> buttons) {
         boolean keyPressed = action == GLFW_PRESS;
 
-        if (keyPressed && key == GLFW_KEY_W && selectedButtonIndex > 0) {
+        if (keyPressed && key == game.keyListState.getValueByIndex(4) && selectedButtonIndex > 0) {
             selectedButtonIndex--;
-        } else if (keyPressed && key == GLFW_KEY_S && selectedButtonIndex < buttons.size() - 1) {
+        } else if (keyPressed && key == game.keyListState.getValueByIndex(5) && selectedButtonIndex < buttons.size() - 1) {
             selectedButtonIndex++;
-        } else if (keyPressed && (key == GLFW_KEY_ENTER || key == GLFW_KEY_D|| key == GLFW_KEY_SPACE) && onActivated != null) {
+        } else if (keyPressed && (key == game.keyListState.getValueByIndex(7) || key == game.keyListState.getValueByIndex(6)) && onActivated != null) {
             buttons.get(selectedButtonIndex).onActivated.run();
         }
     }

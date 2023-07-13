@@ -3,9 +3,10 @@ package io.github.sdxqw.pong2.handling;
 import io.github.sdxqw.pong2.utils.Utils;
 import lombok.Getter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -29,14 +30,30 @@ public class ResourceManager {
             return loadedImages.get(imagePath);
         }
 
-        try {
-            Path resourcePath = Paths.get(Objects.requireNonNull(Utils.class.getResource(imagePath)).toURI());
-            ByteBuffer imageBuffer = Utils.readFile(resourcePath);
+        try (InputStream in = Utils.class.getResourceAsStream(imagePath);
+             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+
+            int bytesRead;
+            byte[] data = new byte[1024];
+            while ((bytesRead = Objects.requireNonNull(in).read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, bytesRead);
+            }
+            buffer.flush();
+            byte[] imageBytes = buffer.toByteArray();
+
+            ByteBuffer imageBuffer = ByteBuffer.allocateDirect(imageBytes.length);
+            imageBuffer.put(imageBytes);
+            imageBuffer.flip();
+
             int imageId = nvgCreateImageMem(nvg, NVG_IMAGE_GENERATE_MIPMAPS, imageBuffer);
             loadedImages.put(imagePath, imageId);
             return imageId;
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Failed to load image: " + imagePath);
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("Resource not found: " + imagePath);
+            e.printStackTrace();
         }
         return 0;
     }

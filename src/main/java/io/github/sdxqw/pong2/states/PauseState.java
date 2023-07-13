@@ -29,9 +29,9 @@ public class PauseState extends GameState {
         buttons = new ArrayList<>();
 
         for (int i = 0; i <= WINDOW_HEIGHT; i += 25) {
-            resumeButton = new Button(0, (float) WINDOW_WIDTH / 2 - i + 45, (float) WINDOW_HEIGHT / 2 - 50, 200, 80, "Resume", 35);
-            mainMenuButton = new Button(1, (float) WINDOW_WIDTH / 2 - i + 30, (float) WINDOW_HEIGHT / 2 + 10, 200, 80, "Main Menu", 22);
-            exitButton = new Button(2, (float) WINDOW_WIDTH / 2 - i - 5, (float) WINDOW_HEIGHT / 2 + 60, 200, 80, "Exit", 18);
+            resumeButton = new Button(game, 0, (float) WINDOW_WIDTH / 2 - i + 45, (float) WINDOW_HEIGHT / 2 - 50, 200, 80, "Resume", 35);
+            mainMenuButton = new Button(game, 1, (float) WINDOW_WIDTH / 2 - i + 30, (float) WINDOW_HEIGHT / 2 + 10, 200, 80, "Main Menu", 22);
+            exitButton = new Button(game, 2, (float) WINDOW_WIDTH / 2 - i - 5, (float) WINDOW_HEIGHT / 2 + 60, 200, 80, "Exit", 18);
         }
 
         resumeButton.setOnActivated(this::resumeGame);

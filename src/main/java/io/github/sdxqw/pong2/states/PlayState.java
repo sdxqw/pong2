@@ -6,7 +6,6 @@ import io.github.sdxqw.pong2.entity.Paddle;
 import io.github.sdxqw.pong2.rendering.Rendering;
 import io.github.sdxqw.pong2.utils.Utils;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_P;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.nanovg.NanoVG.*;
 
@@ -25,8 +24,8 @@ public class PlayState extends GameState {
 
     public PlayState(PongGame game) {
         super(game);
-        player1 = new Paddle(game.inputManager);
-        player2 = new Paddle(game.inputManager);
+        player1 = new Paddle(game);
+        player2 = new Paddle(game);
         player2.getPosition().x = PongGame.WINDOW_WIDTH - player2.getWidth() - player2.getPosition().x;
         ball = new Ball(PongGame.WINDOW_WIDTH, PongGame.WINDOW_HEIGHT, player1, player2, game.score);
         isGameTerminated = false;
@@ -52,7 +51,7 @@ public class PlayState extends GameState {
 
     @Override
     public void update(double deltaTime) {
-        if (game.inputManager.isKeyPressed(game.keyListState.getValueByIndex(5)))
+        if (game.inputManager.isKeyPressed(game.keyListState.getValueByIndex(10)))
             isGameTerminated = true;
 
         if (!isGameTerminated) {

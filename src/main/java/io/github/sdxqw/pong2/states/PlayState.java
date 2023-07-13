@@ -59,6 +59,7 @@ public class PlayState extends GameState {
             ball.moveBall(PongGame.WINDOW_HEIGHT, PongGame.WINDOW_WIDTH, deltaTime);
             player1.movePaddle(PongGame.WINDOW_HEIGHT, deltaTime);
             player2.moveBotPaddle(PongGame.WINDOW_HEIGHT, deltaTime, ball);
+            game.score.scores.add(game.score.getPlayer1Score());
         }
 
         this.deltaTime = (float) deltaTime;

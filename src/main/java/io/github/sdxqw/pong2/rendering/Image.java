@@ -1,5 +1,7 @@
 package io.github.sdxqw.pong2.rendering;
 
+import io.github.sdxqw.pong2.handling.ResourceLocation;
+import io.github.sdxqw.pong2.handling.ResourceManager;
 import io.github.sdxqw.pong2.utils.Utils;
 import lombok.Getter;
 

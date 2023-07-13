@@ -1,4 +1,4 @@
-package io.github.sdxqw.pong2.rendering;
+package io.github.sdxqw.pong2.handling;
 
 import io.github.sdxqw.pong2.utils.Utils;
 import lombok.Getter;

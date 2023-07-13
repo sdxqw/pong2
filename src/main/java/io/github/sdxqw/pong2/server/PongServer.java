@@ -14,6 +14,7 @@ public class PongServer {
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "123";
     private Connection connection;
+    private boolean initialConnectionAttempt = false;
 
     public PongServer(PongGame game) {
         Thread threadConnection = new Thread(this::connectToDatabase);
@@ -55,6 +56,7 @@ public class PongServer {
             try {
                 connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                 System.out.println("Connected to the database");
+                initialConnectionAttempt = true;
                 return; // Connection successful, exit the loop
             } catch (SQLException e) {
                 System.err.println("Error connecting to the database: " + e.getMessage());
@@ -73,8 +75,10 @@ public class PongServer {
 
     public synchronized Connection getConnection() {
         try {
-            if (connection != null && !connection.isClosed()) {
+            if (connection != null && !connection.isClosed() && connection.isValid(5)) {
                 return connection;
+            } else {
+                connection = null; // Set the connection to null to force reconnection
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,7 +86,6 @@ public class PongServer {
 
         return null;
     }
-
     public void closeConnection() {
         try {
             synchronized (this) {
@@ -98,37 +101,39 @@ public class PongServer {
     public void loadSessionFromDatabase(PongGame game, UUID sessionID) {
         Connection conn;
 
-        while ((conn = getConnection()) == null) {
+        if (!initialConnectionAttempt) handleNoDatabaseConnection(game);
+        while ((conn = getConnection()) == null && !initialConnectionAttempt) {
             try {
                 Thread.sleep(1000); // Wait for 1 second before trying again
-                handleNoDatabaseConnection(game);
             } catch (InterruptedException e) {
-                handleNoDatabaseConnection(game);
                 e.printStackTrace();
             }
         }
 
 
-        // Database connection is available, load session data from the database
-        String query = "SELECT username, highest_scores FROM Users WHERE session_id = ?";
-        try (PreparedStatement statement = conn.prepareStatement(query)) {
-            statement.setString(1, sessionID.toString());
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    String username = resultSet.getString("username");
-                    int highestScores = resultSet.getInt("highest_scores");
 
-                    // Update the game state with the loaded session data
-                    updateGameState(game, username, highestScores);
-                } else {
-                    // No session data found in the database, handle the case
-                    handleNoSessionID(game);
+        if (conn != null) {
+            // Database connection is available, load session data from the database
+            String query = "SELECT username, highest_scores FROM Users WHERE session_id = ?";
+            try (PreparedStatement statement = conn.prepareStatement(query)) {
+                statement.setString(1, sessionID.toString());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        String username = resultSet.getString("username");
+                        int highestScores = resultSet.getInt("highest_scores");
+
+                        // Update the game state with the loaded session data
+                        updateGameState(game, username, highestScores);
+                    } else {
+                        // No session data found in the database, handle the case
+                        handleNoSessionID(game);
+                    }
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Error occurred during database query, handle the case
+                handleNoDatabaseConnection(game);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Error occurred during database query, handle the case
-            handleNoDatabaseConnection(game);
         }
     }
 
@@ -137,7 +142,7 @@ public class PongServer {
         game.userData.loadSessionID();
 
         // Update the game state with the loaded session data
-        updateGameState(game, "User" + (Math.abs(new Random().nextInt()) % 100 + 1), 0);
+        updateGameState(game, "User" + (Math.abs(new Random().nextInt()) % 100 + 1), game.score.getHighest());
     }
 
     public void handleNoSessionID(PongGame game) {
@@ -169,6 +174,31 @@ public class PongServer {
         }
 
         return usernames;
+    }
+
+    public int getHighestScore(UUID sessionID) {
+        int highestScore = 0;
+        Connection conn = getConnection(); // Get the connection
+
+        if (conn == null) {
+            // Handle the case where there is no database connection
+            return highestScore;
+        }
+
+        if (initialConnectionAttempt) {
+            try (PreparedStatement statement = conn.prepareStatement("SELECT highest_scores FROM Users WHERE session_id = ?")) {
+                statement.setString(1, sessionID.toString());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        highestScore = resultSet.getInt("highest_scores");
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return highestScore;
     }
 
     public List<Integer> getHighestScores() {

@@ -26,7 +26,7 @@ public class TopListState extends GameState {
     public void render(Rendering renderer, long vg) {
         float startX = (float) PongGame.WINDOW_WIDTH / 2 - 210;
         float startY = (float) PongGame.WINDOW_HEIGHT / 2 - 230;
-        game.font.drawText("TOP-LIST PLAYERS", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER, (float) PongGame.WINDOW_WIDTH / 2 , startY - 70, 40, Utils.color(1f, 1f, 1f, 1f));
+        game.font.drawText("TOP-LIST PLAYERS", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER, (float) PongGame.WINDOW_WIDTH / 2, startY - 70, 40, Utils.color(1f, 1f, 1f, 1f));
 
         blinkTimer += deltaTime;
         if (blinkTimer >= 0.3f) {
@@ -37,14 +37,14 @@ public class TopListState extends GameState {
         if (isTextVisible) {
             game.font.drawText("Press ESC to go back", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
                     (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 320, 22,
-                    Utils.color(1f, 1f, 1f, 1f));
+                    Utils.color(0.8f, 0.8f, 0.8f, 0.8f));
         }
 
         if (game.server.getConnection() == null || game.server.getConnection().isClosed()) {
             if (isTextVisible) {
                 game.font.drawText("No Database Connection :(", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
                         (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2, 50,
-                        Utils.color(0.2f, 0.2f, 0.2f, 0.4f));
+                        Utils.color(0.2f, 0.2f, 0.2f, 0.8f));
             }
             return;
         }
@@ -64,9 +64,11 @@ public class TopListState extends GameState {
         for (int i : indices) {
             if (counter < 10) {
                 float yPos = startY + counter * 30;
-                if (game.userName.equals(allUserNames.get(i)))
-                    game.font.drawText(allUserNames.get(i), NanoVG.NVG_ALIGN_LEFT | NanoVG.NVG_ALIGN_MIDDLE, startX, yPos, 28, Utils.color(0.2f, 0.5f, 0.8f, 1f));
-                else
+                if (game.userName.equals(allUserNames.get(i))) {
+                    if (isTextVisible)
+                        game.font.drawText(">", NanoVG.NVG_ALIGN_LEFT | NanoVG.NVG_ALIGN_MIDDLE, startX - 20, yPos - 0.5f, 32, Utils.color(1f, 1f, 0f, 1f));
+                    game.font.drawText(allUserNames.get(i), NanoVG.NVG_ALIGN_LEFT | NanoVG.NVG_ALIGN_MIDDLE, startX, yPos, 28, Utils.color(1f, 1f, 1f, 1f));
+                } else
                     game.font.drawText(allUserNames.get(i), NanoVG.NVG_ALIGN_LEFT | NanoVG.NVG_ALIGN_MIDDLE, startX, yPos, 28, Utils.color(1f, 1f, 1f, 1f));
                 float xPos = startX + 485;
                 game.font.drawText(String.valueOf(highestScores.get(i)), NanoVG.NVG_ALIGN_RIGHT | NanoVG.NVG_ALIGN_MIDDLE, xPos, yPos, 28, Utils.color(0.6f, 0.2f, 0.4f, 0.6f));

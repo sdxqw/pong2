@@ -1,6 +1,6 @@
 package io.github.sdxqw.pong2.utils;
 
-import io.github.sdxqw.pong2.rendering.ResourceLocation;
+import io.github.sdxqw.pong2.handling.ResourceLocation;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.nanovg.NVGColor;

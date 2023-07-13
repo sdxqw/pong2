@@ -68,7 +68,7 @@ public class KeyListState extends GameState {
         if (isTextVisible) {
             game.font.drawText("Press ESC to go back", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
                     (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 320, 22,
-                    Utils.color(1f, 1f, 1f, 1f));
+                    Utils.color(0.8f, 0.8f, 0.8f, 0.8f));
         }
     }
 

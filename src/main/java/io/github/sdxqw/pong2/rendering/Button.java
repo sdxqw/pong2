@@ -63,7 +63,7 @@ public class Button {
             selectedButtonIndex--;
         } else if (keyPressed && key == GLFW_KEY_S && selectedButtonIndex < buttons.size() - 1) {
             selectedButtonIndex++;
-        } else if (keyPressed && (key == GLFW_KEY_ENTER || key == GLFW_KEY_D) && onActivated != null) {
+        } else if (keyPressed && (key == GLFW_KEY_ENTER || key == GLFW_KEY_D|| key == GLFW_KEY_SPACE) && onActivated != null) {
             buttons.get(selectedButtonIndex).onActivated.run();
         }
     }

@@ -41,7 +41,7 @@ public class MainMenuState extends GameState {
 
         startButton.setOnActivated(this::startGame);
         topListButton.setOnActivated(() -> game.changeState(new TopListState(game)));
-        keybindingList.setOnActivated(() -> game.changeState(new KeyListState(game)));
+        keybindingList.setOnActivated(() -> game.changeState(game.keyListState));
         exitButton.setOnActivated(game::endGame);
 
         buttons.add(startButton);
@@ -54,15 +54,18 @@ public class MainMenuState extends GameState {
     @Override
     public void render(Rendering renderer, long vg) {
         game.font.drawText("PONG 2", NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM, (float) WINDOW_WIDTH / 2 - 525, (float) WINDOW_HEIGHT / 2 - 190, 50, Utils.color(1f, 1f, 1f, 1f));
-        game.font.drawText(game.userName, NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 170, 25, Utils.color(0.6f, 0.2f, 0.4f, 0.6f));
 
         if (game.server.getConnection() != null && !game.server.getConnection().isClosed()) {
             dbGreen.render((float) WINDOW_WIDTH / 2 - 422, (float) WINDOW_HEIGHT / 2 - 237, 31, 37.5f, new float[]{1f, 1f, 1f, 1f});
-            game.font.drawText(String.valueOf(game.server.getHighestScore(game.userData.getSessionID())), NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 140, 25, Utils.color(0.4f, 0.1f, 0.3f, 0.6f));
+            game.font.drawText(game.userName, NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 170, 25,  Utils.color(0.2f, 0.6f, 0.2f, 0.6f));
+            game.font.drawText(String.valueOf(game.server.getHighestScore(game.userData.getSessionID())), NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 140, 25, Utils.color(0.1f, 0.4f, 0.2f, 0.6f));
         } else {
-            game.font.drawText(String.valueOf(game.score.getHighest()), NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 140, 25, Utils.color(0.4f, 0.1f, 0.3f, 0.6f));
+            game.font.drawText(game.server.oldUsername, NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 170, 25, Utils.color(0.6f, 0.2f, 0.4f, 0.6f));
+            game.font.drawText(String.valueOf(game.score.getHighest()), NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 140, 25, Utils.color(0.4f, 0.2f, 0.3f, 0.6f));
             dbRed.render((float) WINDOW_WIDTH / 2 - 422, (float) WINDOW_HEIGHT / 2 - 237, 31, 37.5f, new float[]{1f, 1f, 1f, 1f});
         }
+
+        game.font.drawText("Made by sdxqw.", NVG_ALIGN_MIDDLE | NVG_ALIGN_BOTTOM, (float) WINDOW_WIDTH / 2 + 470, (float) WINDOW_HEIGHT / 2 + 335, 20, Utils.color(0.4f, 0.4f, 0.4f, 0.6f));
 
 
         buttons.forEach(e -> e.renderButton(game.vg, game.font));

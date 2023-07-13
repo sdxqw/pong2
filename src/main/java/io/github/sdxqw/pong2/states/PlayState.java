@@ -6,8 +6,8 @@ import io.github.sdxqw.pong2.entity.Paddle;
 import io.github.sdxqw.pong2.rendering.Rendering;
 import io.github.sdxqw.pong2.utils.Utils;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_J;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_N;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_P;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.nanovg.NanoVG.*;
 
 public class PlayState extends GameState {
@@ -52,7 +52,7 @@ public class PlayState extends GameState {
 
     @Override
     public void update(double deltaTime) {
-        if (game.inputManager.isKeyPressed(GLFW_KEY_N))
+        if (game.inputManager.isKeyPressed(game.keyListState.getValueByIndex(5)))
             isGameTerminated = true;
 
         if (!isGameTerminated) {
@@ -79,30 +79,27 @@ public class PlayState extends GameState {
 
             game.showPauseMenu = false;
 
-            if (game.score.getPlayer1Score() == WINNING_SCORE) {
-                game.font.drawText(game.userName + " Won!", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
-                        (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 - 100,
-                        100, Utils.color(1f, 1f, 1f, 1f));
-            }
-
-            if (game.score.getPlayer2Score() == WINNING_SCORE) {
-                game.font.drawText("Bot Won!", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
-                        (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 - 100,
-                        100, Utils.color(1f, 1f, 1f, 1f));
-            }
-
-            if (game.score.getPlayer1Score() != WINNING_SCORE && game.score.getPlayer2Score() != WINNING_SCORE) {
+            if (game.score.getPlayer1Score() == game.score.getPlayer2Score())
                 game.font.drawText("None Won!", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
                         (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 - 100,
                         100, Utils.color(1f, 1f, 1f, 1f));
-            }
+            else if (game.score.getPlayer1Score() > game.score.getPlayer2Score())
+                game.font.drawText(game.userName + " Won!", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
+                        (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 - 100,
+                        100, Utils.color(1f, 1f, 1f, 1f));
+            else
+                game.font.drawText("Bot Won!", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
+                        (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 - 100,
+                        100, Utils.color(1f, 1f, 1f, 1f));
 
             game.font.drawText(String.valueOf(game.score.getPlayer1Score()), NVG_ALIGN_RIGHT,
                     (float) PongGame.WINDOW_WIDTH / 2 - 120, (float) PongGame.WINDOW_HEIGHT / 2 + 35, 60,
                     Utils.color(1f, 1f, 1f, 1f));
+
             game.font.drawText(String.valueOf(game.score.getPlayer2Score()), NVG_ALIGN_LEFT,
                     (float) PongGame.WINDOW_WIDTH / 2 + 120, (float) PongGame.WINDOW_HEIGHT / 2 + 35, 60,
                     Utils.color(1f, 1f, 1f, 1f));
+
             game.font.drawText("-", NVG_ALIGN_LEFT,
                     (float) PongGame.WINDOW_WIDTH / 2 - 10, (float) PongGame.WINDOW_HEIGHT / 2 + 25, 60,
                     Utils.color(1f, 1f, 1f, 1f));
@@ -114,16 +111,14 @@ public class PlayState extends GameState {
             }
 
             if (isTextVisible) {
-                game.font.drawText("Press J to restart", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
+                game.font.drawText("Press SPACE to restart", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
                         (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 100, 25,
                         Utils.color(1f, 1f, 1f, 1f));
             }
-
-            if (game.inputManager.isKeyPressed(GLFW_KEY_J)) {
+            if (game.inputManager.isKeyPressed(GLFW_KEY_SPACE)) {
                 resetGame();
             }
         }
-
     }
 
     private void renderScores() {

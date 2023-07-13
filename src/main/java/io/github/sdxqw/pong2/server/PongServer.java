@@ -15,6 +15,7 @@ public class PongServer {
     private static final String DB_PASSWORD = "123";
     private Connection connection;
     private boolean initialConnectionAttempt = false;
+    public String oldUsername = null;
 
     public PongServer(PongGame game) {
         Thread threadConnection = new Thread(this::connectToDatabase);
@@ -110,8 +111,6 @@ public class PongServer {
             }
         }
 
-
-
         if (conn != null) {
             // Database connection is available, load session data from the database
             String query = "SELECT username, highest_scores FROM Users WHERE session_id = ?";
@@ -141,8 +140,10 @@ public class PongServer {
         // Load session data from the local UserData
         game.userData.loadSessionID();
 
+        String username = "User" + (Math.abs(new Random().nextInt()) % 100 + 1);
         // Update the game state with the loaded session data
-        updateGameState(game, "User" + (Math.abs(new Random().nextInt()) % 100 + 1), game.score.getHighest());
+        updateGameState(game, username, game.score.getHighest());
+        oldUsername = username;
     }
 
     public void handleNoSessionID(PongGame game) {

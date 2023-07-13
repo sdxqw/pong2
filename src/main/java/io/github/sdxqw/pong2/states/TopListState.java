@@ -44,7 +44,7 @@ public class TopListState extends GameState {
             if (isTextVisible) {
                 game.font.drawText("No Database Connection :(", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
                         (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2, 50,
-                        Utils.color(0.2f, 0.2f, 0.2f, 0.8f));
+                        Utils.color(0.3f, 0.3f, 0.3f, 0.8f));
             }
             return;
         }
@@ -77,10 +77,7 @@ public class TopListState extends GameState {
                 break;
             }
         }
-
-
     }
-
 
     @Override
     public void update(double deltaTime) {

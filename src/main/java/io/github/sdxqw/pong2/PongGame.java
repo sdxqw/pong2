@@ -38,7 +38,8 @@ public class PongGame {
     public PongServer server;
     public UserData userData;
     private Rendering renderer;
-    private GameState currentState;
+    public GameState currentState;
+    public KeyListState keyListState = new KeyListState(this);
     private FPS fpsCounter;
     private boolean isGameRunning = false;
     private boolean showFPS = true;
@@ -166,30 +167,35 @@ public class PongGame {
             if (currentState instanceof MainMenuState)
                 ((MainMenuState) currentState).onKeyPressed(key, action);
 
-            if (inputManager.isKeyPressed(GLFW_KEY_ESCAPE)) {
+            if (inputManager.isKeyPressed(keyListState.getValueByIndex(8))) {
                 if (!(currentState instanceof PauseState) && !(currentState instanceof MainMenuState)
                         && !(currentState instanceof KeyListState) && !(currentState instanceof TopListState) && showPauseMenu) {
                     isGamePaused = true;
                     changeState(new PauseState(this, (PlayState) currentState));
                 }
 
-                if (currentState instanceof KeyListState)
+                if (currentState instanceof KeyListState) {
+                    keyListState.isFirstEnter = true;
                     changeState(new MainMenuState(this));
+                }
 
                 if (currentState instanceof TopListState)
                     changeState(new MainMenuState(this));
             }
 
+            if (currentState instanceof KeyListState)
+                ((KeyListState) currentState).onKeyPressed(key, action);
+
             if (currentState instanceof PauseState)
                 ((PauseState) currentState).onKeyPressed(key, action);
 
-            if (inputManager.isKeyPressed(GLFW_KEY_LEFT_SHIFT) && currentState instanceof PlayState)
+            if (inputManager.isKeyPressed(keyListState.getValueByIndex(1)) && currentState instanceof PlayState)
                 ((PlayState) currentState).ball.incrementSpeed(2f);
 
-            if (inputManager.isKeyPressed(GLFW_KEY_LEFT_CONTROL) && currentState instanceof PlayState)
+            if (inputManager.isKeyPressed(keyListState.getValueByIndex(0)) && currentState instanceof PlayState)
                 ((PlayState) currentState).ball.resetSpeed();
 
-            if (inputManager.isKeyPressed(GLFW_KEY_L))
+            if (inputManager.isKeyPressed(keyListState.getValueByIndex(2)))
                 showFPS = !showFPS;
         });
     }

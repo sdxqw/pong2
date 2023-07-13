@@ -1,8 +1,10 @@
 package io.github.sdxqw.pong2.utils;
 
+import io.github.sdxqw.pong2.rendering.ResourceLocation;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
@@ -14,6 +16,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Objects;
+
+import static org.lwjgl.nanovg.NanoVG.*;
 
 public class Utils {
     public static ByteBuffer readFile(Path path) throws IOException {
@@ -55,6 +59,16 @@ public class Utils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void drawImage(long nvg, ResourceLocation location, float x, float y, float width, float height, int alpha, float[] color) {
+        nvgBeginPath(nvg);
+        NVGPaint paint = nvgImagePattern(nvg, x, y, width, height, 0.0F, location.getId(), alpha / 255.0F, NVGPaint.create());
+        paint.innerColor(color(color[0], color[1], color[2], color[3]));
+        paint.outerColor(color(color[0], color[1], color[2], color[3]));
+        nvgRect(nvg, x, y, width, height);
+        nvgFillPaint(nvg, paint);
+        nvgFill(nvg);
     }
 
     public static NVGColor color(float r, float g, float b, float a) {

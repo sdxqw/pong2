@@ -14,8 +14,6 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.opengl.GL;
 
-import java.util.UUID;
-
 import static io.github.sdxqw.pong2.utils.Utils.loadImage;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nanovg.NanoVG.*;
@@ -28,7 +26,7 @@ public class PongGame {
     public static final int WINDOW_HEIGHT = 720;
     private static final String WINDOW_TITLE = "Pong 2";
 
-    public String userName = "User";
+    public String userName = "Loading User Name...";
 
     public long window;
     public long vg;
@@ -38,11 +36,10 @@ public class PongGame {
     public boolean isGamePaused = false;
     public boolean showPauseMenu = true;
     public PongServer server;
+    public UserData userData;
     private Rendering renderer;
     private GameState currentState;
     private FPS fpsCounter;
-    private UserData userData;
-
     private boolean isGameRunning = false;
     private boolean showFPS = true;
 
@@ -93,27 +90,29 @@ public class PongGame {
             glfwShowWindow(window);
 
             score = new Score();
-            fpsCounter = new FPS(0.5f);
+            fpsCounter = new FPS(0.4f);
             renderer = new Rendering();
             font = new Font(vg, "pixel");
             inputManager = new InputManager(window);
 
-            server = new PongServer();
-            userData = new UserData();
+            server = new PongServer(this);
 
+            userData = new UserData();
             userData.loadSessionID();
 
-            if (userData.getSessionID() != null) {
-                // Load existing session from database using session ID
+            Thread loadDataThread = new Thread(() -> {
                 server.loadSessionFromDatabase(this, userData.getSessionID());
-            } else {
-                // Generate new session ID
-                UUID sessionID = UUID.randomUUID();
-                userData.setSessionID(sessionID);
-            }
+                // Generate a new session ID if it is null
+                if (userData.getSessionID() == null) {
+                    server.handleNoSessionID(this);
+                }
+            });
+            loadDataThread.start();
 
             GLFWImage.Buffer iconBuffer = loadImage("/textures/image/icon.png");
             glfwSetWindowIcon(window, iconBuffer);
+
+            // Load other resources such as images and fonts here
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,6 +120,7 @@ public class PongGame {
 
         lastTime = glfwGetTime();
     }
+
 
     private void createWindow() {
         glfwDefaultWindowHints();

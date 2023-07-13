@@ -1,9 +1,9 @@
 package io.github.sdxqw.pong2.states;
 
 import io.github.sdxqw.pong2.PongGame;
-import io.github.sdxqw.pong2.rendering.Button;
-import io.github.sdxqw.pong2.rendering.Rendering;
+import io.github.sdxqw.pong2.rendering.*;
 import io.github.sdxqw.pong2.utils.Utils;
+import lombok.SneakyThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +21,15 @@ public class MainMenuState extends GameState {
     private Button exitButton;
     private Button topListButton;
 
+    private final Image dbRed;
+    private final Image dbGreen;
+
     public MainMenuState(PongGame game) {
         super(game);
         buttons = new ArrayList<>();
         playState = new PlayState(game);
-
+        dbRed = new Image(new ResourceManager(game.vg), new ResourceLocation("/textures/image/db-red.png"));
+        dbGreen = new Image(new ResourceManager(game.vg), new ResourceLocation("/textures/image/db-green.png"));
         for (int i = 0; i <= WINDOW_HEIGHT; i += 15) {
             startButton = new Button(0, (float) WINDOW_WIDTH / 2 - i + 45, (float) WINDOW_HEIGHT / 2 - 50, 200, 80, "Start", 35);
             topListButton = new Button(1, (float) WINDOW_WIDTH / 2 - i + 45, (float) WINDOW_HEIGHT / 2 + 10, 200, 80, "Top-List", 22);
@@ -44,10 +48,17 @@ public class MainMenuState extends GameState {
         buttons.add(exitButton);
     }
 
+    @SneakyThrows
     @Override
     public void render(Rendering renderer, long vg) {
         game.font.drawText("PONG 2", NVG_ALIGN_CENTER | NVG_ALIGN_BOTTOM, (float) WINDOW_WIDTH / 2 - 525, (float) WINDOW_HEIGHT / 2 - 190, 50, Utils.color(1f, 1f, 1f, 1f));
         game.font.drawText(game.userName, NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 170, 25, Utils.color(0.6f, 0.2f, 0.4f, 0.6f));
+
+        if (game.server.getConnection() != null && !game.server.getConnection().isClosed())
+            dbGreen.render((float) WINDOW_WIDTH / 2 - 422, (float) WINDOW_HEIGHT / 2 - 237, 31, 37.5f, new float[]{1f, 1f, 1f, 1f});
+        else dbRed.render((float) WINDOW_WIDTH / 2 - 422, (float) WINDOW_HEIGHT / 2 - 237, 31, 37.5f, new float[]{1f, 1f, 1f, 1f});
+
+
         buttons.forEach(e -> e.renderButton(game.vg, game.font));
     }
 
@@ -64,5 +75,7 @@ public class MainMenuState extends GameState {
 
     private void startGame() {
         game.changeState(playState);
+        dbRed.cleanup();
+        dbGreen.cleanup();
     }
 }

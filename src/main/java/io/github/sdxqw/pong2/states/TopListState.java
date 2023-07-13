@@ -3,6 +3,7 @@ package io.github.sdxqw.pong2.states;
 import io.github.sdxqw.pong2.PongGame;
 import io.github.sdxqw.pong2.rendering.Rendering;
 import io.github.sdxqw.pong2.utils.Utils;
+import lombok.SneakyThrows;
 import org.lwjgl.nanovg.NanoVG;
 
 import java.util.ArrayList;
@@ -20,12 +21,35 @@ public class TopListState extends GameState {
         super(game);
     }
 
+    @SneakyThrows
     @Override
     public void render(Rendering renderer, long vg) {
         float startX = (float) PongGame.WINDOW_WIDTH / 2 - 210;
         float startY = (float) PongGame.WINDOW_HEIGHT / 2 - 230;
-        game.font.drawText("TOP-LIST PLAYERS", NanoVG.NVG_ALIGN_MIDDLE | NanoVG.NVG_ALIGN_LEFT, startX + 55, startY - 70, 40, Utils.color(1f, 1f, 1f, 1f));
+        game.font.drawText("TOP-LIST PLAYERS", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER, (float) PongGame.WINDOW_WIDTH / 2 , startY - 70, 40, Utils.color(1f, 1f, 1f, 1f));
 
+        blinkTimer += deltaTime;
+        if (blinkTimer >= 0.3f) {
+            isTextVisible = !isTextVisible;
+            blinkTimer = 0;
+        }
+
+        if (isTextVisible) {
+            game.font.drawText("Press ESC to go back", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
+                    (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 320, 22,
+                    Utils.color(1f, 1f, 1f, 1f));
+        }
+
+        if (game.server.getConnection() == null || game.server.getConnection().isClosed()) {
+            if (isTextVisible) {
+                game.font.drawText("No Database Connection :(", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
+                        (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2, 50,
+                        Utils.color(0.2f, 0.2f, 0.2f, 0.4f));
+            }
+            return;
+        }
+
+        // Database connection is open, proceed with rendering the top list
         List<String> allUserNames = game.server.getAllUserNames();
         List<Integer> highestScores = game.server.getHighestScores();
 
@@ -52,18 +76,9 @@ public class TopListState extends GameState {
             }
         }
 
-        blinkTimer += deltaTime;
-        if (blinkTimer >= 0.3f) {
-            isTextVisible = !isTextVisible;
-            blinkTimer = 0;
-        }
 
-        if (isTextVisible) {
-            game.font.drawText("Press ESC to go back", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
-                    (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 320, 22,
-                    Utils.color(1f, 1f, 1f, 1f));
-        }
     }
+
 
     @Override
     public void update(double deltaTime) {

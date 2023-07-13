@@ -1,6 +1,9 @@
 package io.github.sdxqw.pong2.entity;
 
+import io.github.sdxqw.pong2.PongGame;
+import io.github.sdxqw.pong2.modes.TypeModes;
 import io.github.sdxqw.pong2.score.Score;
+import io.github.sdxqw.pong2.states.GameModeState;
 import lombok.Getter;
 import lombok.Setter;
 import org.joml.Vector2f;
@@ -64,8 +67,18 @@ public class Ball {
         }
     }
 
-    public void resetSpeed() {
-        speed = 500f;
+    public void resetSpeed(PongGame game) {
+        if (game.currentState instanceof GameModeState) {
+            if (((GameModeState) game.currentState).getMode() == TypeModes.EASY) {
+                speed = 450f;
+            } else if (((GameModeState) game.currentState).getMode() == TypeModes.NORMAL) {
+                speed = 850f;
+            } else if (((GameModeState) game.currentState).getMode() == TypeModes.HARD) {
+                speed = 1060f;
+            } else if (((GameModeState) game.currentState).getMode() == TypeModes.ULTIMATE) {
+                speed = 1100f;
+            }
+        }
     }
 
     public void incrementSpeed(float typeSpeed) {

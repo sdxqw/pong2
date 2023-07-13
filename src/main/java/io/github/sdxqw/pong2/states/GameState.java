@@ -4,7 +4,7 @@ import io.github.sdxqw.pong2.PongGame;
 import io.github.sdxqw.pong2.rendering.Rendering;
 
 public abstract class GameState {
-    protected final PongGame game;
+    public final PongGame game;
 
     public GameState(PongGame game) {
         this.game = game;

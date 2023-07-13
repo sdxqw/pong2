@@ -11,7 +11,8 @@ import static io.github.sdxqw.pong2.PongGame.WINDOW_WIDTH;
 public class Paddle {
     private final float width;
     private final float height;
-    private final float speed;
+    @Setter
+    private float speed;
     private final PongGame game;
     @Setter
     private Vector2f position;

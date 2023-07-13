@@ -3,6 +3,7 @@ package io.github.sdxqw.pong2.states;
 import io.github.sdxqw.pong2.PongGame;
 import io.github.sdxqw.pong2.entity.Ball;
 import io.github.sdxqw.pong2.entity.Paddle;
+import io.github.sdxqw.pong2.modes.TypeModes;
 import io.github.sdxqw.pong2.rendering.Rendering;
 import io.github.sdxqw.pong2.utils.Utils;
 
@@ -10,7 +11,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.nanovg.NanoVG.*;
 
 public class PlayState extends GameState {
-    private static final int WINNING_SCORE = 5;
     private static final int LINE_SPACING = 20;
     private static final int LINE_LENGTH = 10;
     public final Ball ball;
@@ -21,13 +21,44 @@ public class PlayState extends GameState {
     private float deltaTime;
     private boolean isGameTerminated;
 
+    private final GameModeState gameModeState;
 
-    public PlayState(PongGame game) {
+
+    public PlayState(PongGame game, GameModeState gameModeState) {
         super(game);
+        this.gameModeState = gameModeState;
         player1 = new Paddle(game);
         player2 = new Paddle(game);
         player2.getPosition().x = PongGame.WINDOW_WIDTH - player2.getWidth() - player2.getPosition().x;
         ball = new Ball(PongGame.WINDOW_WIDTH, PongGame.WINDOW_HEIGHT, player1, player2, game.score);
+
+        if (gameModeState.mode == TypeModes.EASY) {
+            player1.setSpeed(gameModeState.mode.getSpeedPlayer());
+            player2.setSpeed(gameModeState.mode.getSpeedPlayer());
+            ball.setSpeed(gameModeState.mode.getSpeedBall());
+        }
+
+        if (gameModeState.mode == TypeModes.NORMAL) {
+            player1.setSpeed(gameModeState.mode.getSpeedPlayer());
+            player2.setSpeed(gameModeState.mode.getSpeedPlayer());
+            ball.setSpeed(gameModeState.mode.getSpeedBall());
+        }
+
+        if (gameModeState.mode == TypeModes.HARD) {
+            player1.setSpeed(gameModeState.mode.getSpeedPlayer());
+            player2.setSpeed(gameModeState.mode.getSpeedPlayer());
+            ball.setSpeed(gameModeState.mode.getSpeedBall());
+        }
+
+        if (gameModeState.mode == TypeModes.ULTIMATE) {
+            player1.setSpeed(gameModeState.mode.getSpeedPlayer());
+            player2.setSpeed(gameModeState.mode.getSpeedPlayer());
+            ball.setSpeed(gameModeState.mode.getSpeedBall());
+        }
+
+        System.out.println(player1.getSpeed());
+        System.out.println(player2.getSpeed());
+        System.out.println(ball.getSpeed());
         isGameTerminated = false;
     }
 
@@ -65,7 +96,7 @@ public class PlayState extends GameState {
     }
 
     public void drawWin() {
-        if (game.score.getPlayer1Score() == WINNING_SCORE || game.score.getPlayer2Score() == WINNING_SCORE) {
+        if (game.score.getPlayer1Score() == gameModeState.getMode().getMaxScore() || game.score.getPlayer2Score() == gameModeState.getMode().getMaxScore()) {
             isGameTerminated = true;
             game.score.scores.add(game.score.getPlayer1Score());
         }
@@ -110,9 +141,9 @@ public class PlayState extends GameState {
             }
 
             if (isTextVisible) {
-                game.font.drawText("Press SPACE to restart", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
-                        (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 100, 25,
-                        Utils.color(1f, 1f, 1f, 1f));
+                game.font.drawText("Press ESC to go back", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
+                        (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 320, 22,
+                        Utils.color(0.8f, 0.8f, 0.8f, 0.8f));
             }
             if (game.inputManager.isKeyPressed(GLFW_KEY_SPACE)) {
                 resetGame();
@@ -134,7 +165,7 @@ public class PlayState extends GameState {
         game.showPauseMenu = true;
         game.isGamePaused = false;
         game.score.resetScore();
-        ball.resetSpeed();
+        ball.resetSpeed(game);
         ball.spawnBall(PongGame.WINDOW_WIDTH, PongGame.WINDOW_HEIGHT);
         player1.resetPlayerPosition();
         player2.resetBotPosition();

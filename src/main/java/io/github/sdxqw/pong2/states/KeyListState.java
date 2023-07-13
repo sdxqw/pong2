@@ -135,102 +135,55 @@ public class KeyListState extends GameState {
     }
 
     public String convertKeyToString(int key) {
-        switch (key) {
-            case GLFW_KEY_A:
-                return "A";
-            case GLFW_KEY_B:
-                return "B";
-            case GLFW_KEY_C:
-                return "C";
-            case GLFW_KEY_D:
-                return "D";
-            case GLFW_KEY_E:
-                return "E";
-            case GLFW_KEY_F:
-                return "F";
-            case GLFW_KEY_G:
-                return "G";
-            case GLFW_KEY_H:
-                return "H";
-            case GLFW_KEY_I:
-                return "I";
-            case GLFW_KEY_J:
-                return "J";
-            case GLFW_KEY_K:
-                return "K";
-            case GLFW_KEY_L:
-                return "L";
-            case GLFW_KEY_M:
-                return "M";
-            case GLFW_KEY_N:
-                return "N";
-            case GLFW_KEY_O:
-                return "O";
-            case GLFW_KEY_P:
-                return "P";
-            case GLFW_KEY_Q:
-                return "Q";
-            case GLFW_KEY_R:
-                return "R";
-            case GLFW_KEY_S:
-                return "S";
-            case GLFW_KEY_T:
-                return "T";
-            case GLFW_KEY_U:
-                return "U";
-            case GLFW_KEY_V:
-                return "V";
-            case GLFW_KEY_W:
-                return "W";
-            case GLFW_KEY_X:
-                return "X";
-            case GLFW_KEY_Y:
-                return "Y";
-            case GLFW_KEY_Z:
-                return "Z";
-            case GLFW_KEY_0:
-                return "0";
-            case GLFW_KEY_1:
-                return "1";
-            case GLFW_KEY_2:
-                return "2";
-            case GLFW_KEY_3:
-                return "3";
-            case GLFW_KEY_4:
-                return "4";
-            case GLFW_KEY_5:
-                return "5";
-            case GLFW_KEY_6:
-                return "6";
-            case GLFW_KEY_7:
-                return "7";
-            case GLFW_KEY_8:
-                return "8";
-            case GLFW_KEY_9:
-                return "9";
-            case GLFW_KEY_SPACE:
-                return "SPACE";
-            case GLFW_KEY_ENTER:
-                return "ENTER";
-            case GLFW_KEY_ESCAPE:
-                return "ESC";
-            case GLFW_KEY_BACKSPACE:
-                return "BACKSPACE";
-            case GLFW_KEY_LEFT_CONTROL:
-                return "LCTRL";
-            case GLFW_KEY_RIGHT_CONTROL:
-                return "RCTRL";
-            case GLFW_KEY_LEFT_SHIFT:
-                return "LSHIFT";
-            case GLFW_KEY_RIGHT_SHIFT:
-                return "RSHIFT";
-            case GLFW_KEY_LEFT_ALT:
-                return "LALT";
-            case GLFW_KEY_RIGHT_ALT:
-                return "RALT";
-            default:
-                return "Unknown key";
-        }
+        return switch (key) {
+            case GLFW_KEY_A -> "A";
+            case GLFW_KEY_B -> "B";
+            case GLFW_KEY_C -> "C";
+            case GLFW_KEY_D -> "D";
+            case GLFW_KEY_E -> "E";
+            case GLFW_KEY_F -> "F";
+            case GLFW_KEY_G -> "G";
+            case GLFW_KEY_H -> "H";
+            case GLFW_KEY_I -> "I";
+            case GLFW_KEY_J -> "J";
+            case GLFW_KEY_K -> "K";
+            case GLFW_KEY_L -> "L";
+            case GLFW_KEY_M -> "M";
+            case GLFW_KEY_N -> "N";
+            case GLFW_KEY_O -> "O";
+            case GLFW_KEY_P -> "P";
+            case GLFW_KEY_Q -> "Q";
+            case GLFW_KEY_R -> "R";
+            case GLFW_KEY_S -> "S";
+            case GLFW_KEY_T -> "T";
+            case GLFW_KEY_U -> "U";
+            case GLFW_KEY_V -> "V";
+            case GLFW_KEY_W -> "W";
+            case GLFW_KEY_X -> "X";
+            case GLFW_KEY_Y -> "Y";
+            case GLFW_KEY_Z -> "Z";
+            case GLFW_KEY_0 -> "0";
+            case GLFW_KEY_1 -> "1";
+            case GLFW_KEY_2 -> "2";
+            case GLFW_KEY_3 -> "3";
+            case GLFW_KEY_4 -> "4";
+            case GLFW_KEY_5 -> "5";
+            case GLFW_KEY_6 -> "6";
+            case GLFW_KEY_7 -> "7";
+            case GLFW_KEY_8 -> "8";
+            case GLFW_KEY_9 -> "9";
+            case GLFW_KEY_SPACE -> "SPACE";
+            case GLFW_KEY_ENTER -> "ENTER";
+            case GLFW_KEY_ESCAPE -> "ESC";
+            case GLFW_KEY_BACKSPACE -> "BACKSPACE";
+            case GLFW_KEY_LEFT_CONTROL -> "LCTRL";
+            case GLFW_KEY_RIGHT_CONTROL -> "RCTRL";
+            case GLFW_KEY_LEFT_SHIFT -> "LSHIFT";
+            case GLFW_KEY_RIGHT_SHIFT -> "RSHIFT";
+            case GLFW_KEY_LEFT_ALT -> "LALT";
+            case GLFW_KEY_RIGHT_ALT -> "RALT";
+            default -> "Unknown key";
+        };
     }
 
     public void modifyKeybinding(int newKeyCode) {

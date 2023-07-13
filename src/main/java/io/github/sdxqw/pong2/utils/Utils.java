@@ -27,7 +27,6 @@ public class Utils {
             IntBuffer w = stack.mallocInt(1);
             IntBuffer h = stack.mallocInt(1);
 
-            // Load the image using STBImage
             try (InputStream in = Utils.class.getClassLoader().getResourceAsStream(path);
                  BufferedInputStream bufferedIn = new BufferedInputStream(Objects.requireNonNull(in))) {
 
@@ -67,7 +66,6 @@ public class Utils {
             }
         }
     }
-    
 
     public static void drawImage(long nvg, ResourceLocation location, float x, float y, float width, float height, int alpha, float[] color) {
         nvgBeginPath(nvg);

@@ -1,13 +1,19 @@
 package io.github.sdxqw.pong2.utils;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 
 public class Utils {
     public static ByteBuffer readFile(Path path) throws IOException {
@@ -24,12 +30,31 @@ public class Utils {
         }
     }
 
-    public static ByteBuffer stringToByteBuffer(String string, ByteBuffer buffer) {
-        for (int i = 0; i < string.length(); i++) {
-            buffer.put((byte) string.charAt(i));
+    public static GLFWImage.Buffer loadImage(String path) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            IntBuffer comp = stack.mallocInt(1);
+            IntBuffer w = stack.mallocInt(1);
+            IntBuffer h = stack.mallocInt(1);
+
+            // Load the image using STBImage
+            ByteBuffer imageBuffer = Utils.readFile(Paths.get(Objects.requireNonNull(Utils.class.getResource(path)).toURI()));
+            ByteBuffer image = STBImage.stbi_load_from_memory(imageBuffer, w, h, comp, 4);
+            if (image == null) {
+                throw new RuntimeException("Failed to load image: " + path);
+            }
+
+            // Create a GLFWImage to hold the loaded image
+            GLFWImage.Buffer iconBuffer = GLFWImage.malloc(1);
+            iconBuffer.position(0);
+            iconBuffer.width(w.get(0));
+            iconBuffer.height(h.get(0));
+            iconBuffer.pixels(image);
+
+            return iconBuffer;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        buffer.put((byte) 0);
-        return buffer;
     }
 
     public static NVGColor color(float r, float g, float b, float a) {

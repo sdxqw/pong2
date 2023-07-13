@@ -11,10 +11,12 @@ import io.github.sdxqw.pong2.states.*;
 import io.github.sdxqw.pong2.utils.Utils;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.opengl.GL;
 
 import java.util.UUID;
 
+import static io.github.sdxqw.pong2.utils.Utils.loadImage;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVGGL3.*;
@@ -109,6 +111,9 @@ public class PongGame {
                 UUID sessionID = UUID.randomUUID();
                 userData.setSessionID(sessionID);
             }
+
+            GLFWImage.Buffer iconBuffer = loadImage("/textures/image/icon.png");
+            glfwSetWindowIcon(window, iconBuffer);
 
         } catch (Exception e) {
             e.printStackTrace();

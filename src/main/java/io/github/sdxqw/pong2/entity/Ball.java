@@ -27,7 +27,7 @@ public class Ball {
         this.direction = new Vector2f(getRandomDirection(), getRandomDirection());
         this.width = 20;
         this.height = 20;
-        this.speed = 150f;
+        this.speed = 500f;
         this.player = player;
         this.player2 = player2;
         this.score = score;
@@ -61,12 +61,11 @@ public class Ball {
             }
 
             position = newPosition;
-            incrementSpeed(0);
         }
     }
 
     public void resetSpeed() {
-        speed = 150f;
+        speed = 500f;
     }
 
     public void incrementSpeed(float typeSpeed) {

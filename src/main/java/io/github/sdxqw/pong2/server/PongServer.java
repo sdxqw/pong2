@@ -132,8 +132,6 @@ public class PongServer {
 
     private void updateGameState(PongGame game, String username, int highestScores) {
         game.userName = username;
-        if (highestScores > game.score.highestScore) {
-            game.score.highestScore = highestScores;
-        }
+        game.score.highestScore = highestScores;
     }
 }

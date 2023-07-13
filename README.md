@@ -2,6 +2,11 @@
 
 Pong with LWJGL 3 and NanoVG is a recreation of the classic arcade game Pong, built using LWJGL 3 (Lightweight Java Game Library) and NanoVG (Nano Vector Graphics). The goal of this project is to provide a visually appealing and enjoyable gaming experience while exploring the capabilities of LWJGL 3 and NanoVG.
 
+# Suggest
+We invite you to try out the Pong game developed with LWJGL 3 and NanoVG and experience all of its exciting features firsthand! Immerse yourself in the classic gameplay, challenge your friends, and relive the nostalgia of Pong.
+
+Get ready for an engaging gameplay experience, press "P" to unleash the magic.
+
 # Screenshots
 ![image](https://github.com/sdxqw/pong2/assets/94248011/8889ef80-a25d-40e3-99a1-33831492e179)
 ![image](https://github.com/sdxqw/pong2/assets/94248011/0dcec349-be49-456c-ac85-e2049803c9d8)

@@ -5,6 +5,8 @@ import io.github.sdxqw.pong2.PongGame;
 import lombok.Getter;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -60,6 +62,55 @@ public class PongServer {
             return null;
         }
     }
+
+    public List<String> getAllUsers() {
+        List<String> users = new ArrayList<>();
+
+        if (!isConnectionAlive()) {
+            return users;
+        }
+
+        try {
+            PreparedStatement statement = connectionPool.prepareStatement("SELECT username FROM Users");
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String userName = resultSet.getString("username");
+                users.add(userName);
+            }
+
+            resultSet.close();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve users from the database", e);
+        }
+
+        return users;
+    }
+
+    public List<String> getAllHighestScores() {
+        List<String> scores = new ArrayList<>();
+
+        if (!isConnectionAlive()) {
+            return scores;
+        }
+
+        try {
+            PreparedStatement statement = connectionPool.prepareStatement("SELECT highest_scores FROM Users");
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String highScore = resultSet.getString("highest_scores");
+                scores.add(highScore);
+            }
+
+            resultSet.close();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve highest scores from the database", e);
+        }
+
+        return scores;
+    }
+
 
     public void getUserName(UUID sessionID) {
         if (!isConnectionAlive()) {

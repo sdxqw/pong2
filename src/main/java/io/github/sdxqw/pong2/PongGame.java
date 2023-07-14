@@ -229,7 +229,7 @@ public class PongGame {
         font = new Font(vg, "pixel");
         inputManager = new InputManager(window);
         keyListState = new KeyListState(this);
-        fpsCounter = new FPS(0.2f);
+        fpsCounter = new FPS(0.35f);
         userData = new UserData();
         userData.loadSessionID();
         server = new PongServer(this);

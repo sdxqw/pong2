@@ -13,12 +13,11 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 public class TopListState extends GameState {
+    private final List<String> allPlayers;
+    private final List<String> allHighestScores;
     private double blinkTimer = 0;
     private boolean isTextVisible = true;
     private double deltaTime;
-
-    private final List<String> allPlayers;
-    private final List<String> allHighestScores;
 
     public TopListState(PongGame game) {
         super(game);
@@ -52,8 +51,14 @@ public class TopListState extends GameState {
                         (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2, 50,
                         Utils.color(0.3f, 0.3f, 0.3f, 0.8f));
             }
+            return;
+        } else if (allPlayers.isEmpty() || allHighestScores.isEmpty()) {
+            if (isTextVisible)
+                game.font.drawText("No player status :(", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
+                        (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2, 50,
+                        Utils.color(0.3f, 0.3f, 0.3f, 0.8f));
+            return;
         }
-
 
         List<Integer> indices = new ArrayList<>();
         for (int i = 0; i < allPlayers.size(); i++) {

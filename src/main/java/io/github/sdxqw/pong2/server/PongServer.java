@@ -34,7 +34,7 @@ public class PongServer {
                 Logger.error("Failed to initialize connection pool: %s", dbInfo.getDbUrl());
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.error("Failed to connect to the database: %s", e.getMessage());
         }
     }
 
@@ -59,6 +59,7 @@ public class PongServer {
             statement.setString(1, sessionID.toString());
             return statement.executeQuery();
         } catch (SQLException e) {
+            Logger.error("Failed to execute database query: %s", e.getMessage());
             return null;
         }
     }
@@ -81,7 +82,7 @@ public class PongServer {
 
             resultSet.close();
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to retrieve users from the database", e);
+            Logger.error("Failed to retrieve users from the database: %s", e.getMessage());
         }
 
         return users;
@@ -105,12 +106,11 @@ public class PongServer {
 
             resultSet.close();
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to retrieve highest scores from the database", e);
+            Logger.error("Failed to retrieve highest scores from the database: %s", e.getMessage());
         }
 
         return scores;
     }
-
 
     public void getUserName(UUID sessionID) {
         if (!isConnectionAlive()) {

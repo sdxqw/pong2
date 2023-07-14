@@ -4,49 +4,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Score {
-    public int highestScore;
-    public List<Integer> scores = new ArrayList<>();
+    public final List<Integer> player1Scores = new ArrayList<>();
     private int player1Score;
-    private int player2Score;
+    private int botScore;
 
     public Score() {
         player1Score = 0;
-        player2Score = 0;
+        botScore = 0;
     }
 
     public void incrementPlayer1Score() {
         player1Score++;
+        player1Scores.add(player1Score);
     }
 
-    public void incrementPlayer2Score() {
-        player2Score++;
+    public void incrementBotScore() {
+        botScore++;
+        player1Scores.add(botScore);
     }
 
     public int getPlayer1Score() {
         return player1Score;
     }
 
-    public int getPlayer2Score() {
-        return player2Score;
+    public int getBotScore() {
+        return botScore;
     }
 
     public void resetScore() {
         player1Score = 0;
-        player2Score = 0;
+        botScore = 0;
     }
 
-    // get the highest score from the list from teh player1
-    public int getHighest() {
-        if (scores.isEmpty()) {
+    public int getHighestPlayer1Score() {
+        if (player1Scores.isEmpty()) {
             return 0;
         }
-        int highest = scores.get(0);
-        for (int score : scores) {
-            if (score > highest) {
-                highest = score;
-            }
-        }
-        return highest;
+        return player1Scores.stream().max(Integer::compareTo).orElse(0);
     }
-
 }

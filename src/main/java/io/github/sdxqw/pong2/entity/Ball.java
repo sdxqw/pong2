@@ -16,7 +16,7 @@ public class Ball {
     private final float width;
     private final float height;
     private final Paddle player;
-    private final Paddle player2;
+    private final Paddle bot;
     private final Score score;
     private float speed;
     private boolean hasBallSpawned;
@@ -25,14 +25,14 @@ public class Ball {
     private Vector2f direction;
     private Random random;
 
-    public Ball(float widthWindow, float heightWindow, Paddle player, Paddle player2, Score score) {
+    public Ball(float widthWindow, float heightWindow, Paddle player, Paddle bot, Score score) {
         this.position = new Vector2f(widthWindow / 2, heightWindow / 2);
         this.direction = new Vector2f(getRandomDirection(), getRandomDirection());
         this.width = 20;
         this.height = 20;
         this.speed = 500f;
         this.player = player;
-        this.player2 = player2;
+        this.bot = bot;
         this.score = score;
         this.hasBallSpawned = false;
         this.random = new Random();
@@ -46,7 +46,7 @@ public class Ball {
 
             if (isOutOfBounds(newPosition.x, windowWidth)) {
                 if (newPosition.x < 0) {
-                    score.incrementPlayer2Score();
+                    score.incrementBotScore();
                 } else {
                     score.incrementPlayer1Score();
                 }
@@ -110,7 +110,7 @@ public class Ball {
     }
 
     private boolean isCollidingWithPlayer2(Vector2f newPosition) {
-        return player2.isColliding(newPosition.x, newPosition.y, width, height);
+        return bot.isColliding(newPosition.x, newPosition.y, width, height);
     }
 
     private float getRandomDirection() {

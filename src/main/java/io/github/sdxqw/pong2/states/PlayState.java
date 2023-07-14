@@ -18,10 +18,9 @@ public class PlayState extends GameState {
     private final Paddle player2;
     private final GameModeState gameModeState;
     private double blinkTimer = 0;
+    private float deltaTime = 0;
     private boolean isTextVisible = true;
-    private float deltaTime;
-    private boolean isGameTerminated;
-
+    private boolean isGameTerminated = false;
 
     public PlayState(PongGame game, GameModeState gameModeState) {
         super(game);
@@ -35,30 +34,29 @@ public class PlayState extends GameState {
             player1.setSpeed(gameModeState.mode.getSpeedPlayer());
             player2.setSpeed(gameModeState.mode.getSpeedPlayer());
             ball.setSpeed(gameModeState.mode.getSpeedBall());
+            game.score.resetScore();
         }
 
         if (gameModeState.mode == TypeModes.NORMAL) {
             player1.setSpeed(gameModeState.mode.getSpeedPlayer());
             player2.setSpeed(gameModeState.mode.getSpeedPlayer());
             ball.setSpeed(gameModeState.mode.getSpeedBall());
+            game.score.resetScore();
         }
 
         if (gameModeState.mode == TypeModes.HARD) {
             player1.setSpeed(gameModeState.mode.getSpeedPlayer());
             player2.setSpeed(gameModeState.mode.getSpeedPlayer());
             ball.setSpeed(gameModeState.mode.getSpeedBall());
+            game.score.resetScore();
         }
 
         if (gameModeState.mode == TypeModes.ULTIMATE) {
             player1.setSpeed(gameModeState.mode.getSpeedPlayer());
             player2.setSpeed(gameModeState.mode.getSpeedPlayer());
             ball.setSpeed(gameModeState.mode.getSpeedBall());
+            game.score.resetScore();
         }
-
-        System.out.println(player1.getSpeed());
-        System.out.println(player2.getSpeed());
-        System.out.println(ball.getSpeed());
-        isGameTerminated = false;
     }
 
     @Override
@@ -88,16 +86,16 @@ public class PlayState extends GameState {
             ball.moveBall(PongGame.WINDOW_HEIGHT, PongGame.WINDOW_WIDTH, deltaTime);
             player1.movePaddle(PongGame.WINDOW_HEIGHT, deltaTime);
             player2.moveBotPaddle(PongGame.WINDOW_HEIGHT, deltaTime, ball);
-            game.score.scores.add(game.score.getPlayer1Score());
+            game.score.player1Scores.add(game.score.getPlayer1Score());
         }
 
         this.deltaTime = (float) deltaTime;
     }
 
     public void drawWin() {
-        if (game.score.getPlayer1Score() == gameModeState.getMode().getMaxScore() || game.score.getPlayer2Score() == gameModeState.getMode().getMaxScore()) {
+        if (game.score.getPlayer1Score() == gameModeState.getMode().getMaxScore() || game.score.getBotScore() == gameModeState.getMode().getMaxScore()) {
             isGameTerminated = true;
-            game.score.scores.add(game.score.getPlayer1Score());
+            game.score.player1Scores.add(game.score.getPlayer1Score());
         }
 
         if (isGameTerminated) {
@@ -106,14 +104,12 @@ public class PlayState extends GameState {
             nvgFillColor(game.vg, Utils.color(0f, 0f, 0f, 1f));
             nvgFill(game.vg);
 
-            game.showPauseMenu = false;
-
-            if (game.score.getPlayer1Score() == game.score.getPlayer2Score())
+            if (game.score.getPlayer1Score() == game.score.getBotScore())
                 game.font.drawText("None Won!", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
                         (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 - 100,
                         100, Utils.color(1f, 1f, 1f, 1f));
-            else if (game.score.getPlayer1Score() > game.score.getPlayer2Score())
-                game.font.drawText(game.userName + " Won!", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
+            else if (game.score.getPlayer1Score() > game.score.getBotScore())
+                game.font.drawText(game.userData.getUserName() + " Won!", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
                         (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 - 100,
                         100, Utils.color(1f, 1f, 1f, 1f));
             else
@@ -125,7 +121,7 @@ public class PlayState extends GameState {
                     (float) PongGame.WINDOW_WIDTH / 2 - 120, (float) PongGame.WINDOW_HEIGHT / 2 + 35, 60,
                     Utils.color(1f, 1f, 1f, 1f));
 
-            game.font.drawText(String.valueOf(game.score.getPlayer2Score()), NVG_ALIGN_LEFT,
+            game.font.drawText(String.valueOf(game.score.getBotScore()), NVG_ALIGN_LEFT,
                     (float) PongGame.WINDOW_WIDTH / 2 + 120, (float) PongGame.WINDOW_HEIGHT / 2 + 35, 60,
                     Utils.color(1f, 1f, 1f, 1f));
 
@@ -140,7 +136,7 @@ public class PlayState extends GameState {
             }
 
             if (isTextVisible) {
-                game.font.drawText("Press ESC to go back", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
+                game.font.drawText("Press SPACE to go back", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
                         (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 320, 22,
                         Utils.color(0.8f, 0.8f, 0.8f, 0.8f));
             }
@@ -154,19 +150,19 @@ public class PlayState extends GameState {
         game.font.drawText(String.valueOf(game.score.getPlayer1Score()), NVG_ALIGN_RIGHT,
                 (float) PongGame.WINDOW_WIDTH / 2 - 25, 55, 45,
                 Utils.color(1f, 1f, 1f, 1f));
-        game.font.drawText(String.valueOf(game.score.getPlayer2Score()), NVG_ALIGN_LEFT,
+        game.font.drawText(String.valueOf(game.score.getBotScore()), NVG_ALIGN_LEFT,
                 (float) PongGame.WINDOW_WIDTH / 2 + 25, 55, 45,
                 Utils.color(1f, 1f, 1f, 1f));
     }
 
     private void resetGame() {
         isGameTerminated = false;
-        game.showPauseMenu = true;
         game.isGamePaused = false;
         game.score.resetScore();
         ball.resetSpeed(game);
         ball.spawnBall(PongGame.WINDOW_WIDTH, PongGame.WINDOW_HEIGHT);
         player1.resetPlayerPosition();
         player2.resetBotPosition();
+        game.changeState(new GameModeState(game));
     }
 }

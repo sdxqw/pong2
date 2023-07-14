@@ -34,17 +34,12 @@ public class Font {
                 throw new IOException("Font file not found: " + fontName);
             }
 
-            // Create a temporary file to write the font data
             Path tempFontFile = Files.createTempFile(fontName, ".ttf");
-
-            // Write the font data from the InputStream to the temporary file
             Files.copy(fontInputStream, tempFontFile, StandardCopyOption.REPLACE_EXISTING);
 
-            // Convert the font file path to ByteBuffer
             String fontPath = tempFontFile.toAbsolutePath().toString();
             ByteBuffer fontPathData = MemoryUtil.memUTF8(fontPath);
 
-            // Convert the font name to ByteBuffer
             ByteBuffer fontNameData = MemoryUtil.memUTF8(fontName);
 
             if (nvgCreateFont(nvg, fontNameData, fontPathData) == -1) {

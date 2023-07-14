@@ -1,5 +1,6 @@
 package io.github.sdxqw.pong2.handling;
 
+import io.github.sdxqw.logger.Logger;
 import io.github.sdxqw.pong2.utils.Utils;
 import lombok.Getter;
 
@@ -48,11 +49,8 @@ public class ResourceManager {
             int imageId = nvgCreateImageMem(nvg, NVG_IMAGE_GENERATE_MIPMAPS, imageBuffer);
             loadedImages.put(imagePath, imageId);
             return imageId;
-        } catch (IOException e) {
-            System.out.println("Failed to load image: " + imagePath);
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            System.out.println("Resource not found: " + imagePath);
+        } catch (IOException | NullPointerException e) {
+            Logger.error("Failed to load image: %s", imagePath);
             e.printStackTrace();
         }
         return 0;

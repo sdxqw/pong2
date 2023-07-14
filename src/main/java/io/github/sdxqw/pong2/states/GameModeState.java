@@ -8,7 +8,6 @@ import io.github.sdxqw.pong2.rendering.Rendering;
 import io.github.sdxqw.pong2.utils.Utils;
 import lombok.Getter;
 import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.nanovg.NanoVG;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +27,9 @@ public class GameModeState extends GameState {
     private ButtonMode normalButton;
     private ButtonMode hardButton;
     private ButtonMode ultimateButton;
-
     private double blinkTimer = 0;
+    private float deltaTime = 0;
     private boolean isTextVisible = true;
-    private float deltaTime;
 
     public GameModeState(PongGame game) {
         super(game);
@@ -127,11 +125,8 @@ public class GameModeState extends GameState {
                     (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 320, 22,
                     Utils.color(0.8f, 0.8f, 0.8f, 0.8f));
 
-        for (Button button : buttons) {
-            button.renderButton(vg, game.font);
-        }
+        buttons.forEach(e -> e.renderButton(vg, game.font, renderer));
     }
-
 
     public void onKeyPressed(int key, int action) {
         if (firstClick && key == GLFW_KEY_ENTER) {
@@ -149,6 +144,7 @@ public class GameModeState extends GameState {
         this.deltaTime = (float) deltaTime;
     }
 
+
     public static class ButtonMode extends Button {
 
         private final NVGColor color;
@@ -161,16 +157,14 @@ public class GameModeState extends GameState {
 
         }
 
-        public void renderButton(long vg, Font fontManager) {
+        public void renderButton(long vg, Font fontManager, Rendering rendering) {
             float x0 = x - width / 2;
             float y0 = y;
             float textWidth = fontManager.measureTextWidth(text, fontSize);
             float textX = x - textWidth / 2 + width / 2;
             float textY = y + height / 2 + (fontSize >> 1) + 5;
 
-            NanoVG.nvgBeginPath(vg);
-            NanoVG.nvgRoundedRect(vg, x0, y0, width, height, 4f);
-            NanoVG.nvgFillColor(vg, Utils.color(0.2f, 0.2f, 0.2f, 1.0f));
+            rendering.drawRoundedRect(vg, x0, y0, width, height, 4f);
 
             if (selectedButtonIndex == id) {
                 fontManager.drawText("> " + text, NVG_ALIGN_BOTTOM | NVG_ALIGN_MIDDLE, textX, textY, fontSize, color);

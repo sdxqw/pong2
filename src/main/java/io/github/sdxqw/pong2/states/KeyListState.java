@@ -112,7 +112,7 @@ public class KeyListState extends GameState {
                 game.font.drawText("Key already bound!", NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER,
                         (float) PongGame.WINDOW_WIDTH / 2, (float) PongGame.WINDOW_HEIGHT / 2 + 290, 22,
                         Utils.color(0.6f, 0.6f, 0.6f, 0.6f));
-            // Calculate the position for the value based on the maximum key length
+
             float valueXPos = startX + maxWordLength * 10 + 200;
             game.font.drawText(convertKeyToString(value), NanoVG.NVG_ALIGN_CENTER | NanoVG.NVG_ALIGN_MIDDLE, valueXPos + 30, yPos, fontSize, Utils.color(0.2f, 0.5f, 0.3f, 1f));
         }

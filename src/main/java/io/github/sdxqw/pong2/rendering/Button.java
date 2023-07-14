@@ -3,7 +3,6 @@ package io.github.sdxqw.pong2.rendering;
 import io.github.sdxqw.pong2.PongGame;
 import io.github.sdxqw.pong2.font.Font;
 import io.github.sdxqw.pong2.utils.Utils;
-import org.lwjgl.nanovg.NanoVG;
 
 import java.util.List;
 
@@ -15,12 +14,12 @@ public class Button {
     private final PongGame game;
     public float x;
     public float y;
-    public int fontSize;
-    public int id;
     public float width;
     public float height;
-    public String text;
     public int selectedButtonIndex;
+    public int id;
+    public int fontSize;
+    public String text;
     private Runnable onActivated;
 
     public Button(PongGame game, int id, float x, float y, float width, float height, String text, int fontSize) {
@@ -35,16 +34,14 @@ public class Button {
         this.selectedButtonIndex = 0;
     }
 
-    public void renderButton(long vg, Font fontManager) {
+    public void renderButton(long vg, Font fontManager, Rendering rendering) {
         float x0 = x - width / 2;
         float y0 = y;
         float textWidth = fontManager.measureTextWidth(text, fontSize);
         float textX = x - textWidth / 2 + width / 2;
         float textY = y + height / 2 + (fontSize >> 1) + 5;
 
-        NanoVG.nvgBeginPath(vg);
-        NanoVG.nvgRoundedRect(vg, x0, y0, width, height, 4f);
-        NanoVG.nvgFillColor(vg, Utils.color(0.2f, 0.2f, 0.2f, 1.0f));
+        rendering.drawRoundedRect(vg, x0, y0, width, height, 4f);
 
         if (selectedButtonIndex == id) {
             fontManager.drawText("> " + text, NVG_ALIGN_BOTTOM | NVG_ALIGN_MIDDLE, textX, textY, fontSize, Utils.color(1.0f, 1.0f, 1.0f, 1.0f));
@@ -53,7 +50,6 @@ public class Button {
         }
 
     }
-
 
     public void setOnActivated(Runnable onActivated) {
         this.onActivated = onActivated;

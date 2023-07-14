@@ -54,6 +54,12 @@ public class Rendering {
         drawEntity(vg, ball.getPosition(), ball.getWidth(), ball.getHeight());
     }
 
+    public void drawRoundedRect(long vg, float x, float y, float width, float height, float radius) {
+        NanoVG.nvgBeginPath(vg);
+        NanoVG.nvgRoundedRect(vg, x, y, width, height, radius);
+        NanoVG.nvgFillColor(vg, Utils.color(0.2f, 0.2f, 0.2f, 1.0f));
+    }
+
     private void drawEntity(long vg, Vector2f position, float width, float height) {
         NVGColor color = NVGColor.create();
         color.r(1f);

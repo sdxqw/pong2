@@ -12,6 +12,7 @@ project.ext.lwjglNatives = "natives-windows"
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 shadowJar {
@@ -34,7 +35,11 @@ shadowJar {
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
+    implementation 'io.github.sdxqw:Logger:master-SNAPSHOT'
+    implementation 'ch.qos.logback:logback-classic:1.2.9'
     implementation "org.joml:joml:${jomlVersion}"
+    implementation "com.zaxxer:HikariCP:5.0.1"
+    implementation "org.slf4j:slf4j-api:2.0.7"
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-assimp"
     implementation "org.lwjgl:lwjgl-bgfx"

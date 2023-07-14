@@ -49,7 +49,7 @@ public class PauseState extends GameState {
 
         renderer.renderPauseMenu(game.vg, WINDOW_WIDTH, WINDOW_HEIGHT);
         game.font.drawText("PAUSED", NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE, (float) WINDOW_WIDTH / 2 - 525, (float) WINDOW_HEIGHT / 2 - 200, 50, Utils.color(255, 255, 255, 255));
-        buttons.forEach(e -> e.renderButton(game.vg, game.font));
+        buttons.forEach(e -> e.renderButton(game.vg, game.font, renderer));
     }
 
     @Override

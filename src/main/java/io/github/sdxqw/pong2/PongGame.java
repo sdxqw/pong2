@@ -1,5 +1,6 @@
 package io.github.sdxqw.pong2;
 
+import io.github.sdxqw.logger.Logger;
 import io.github.sdxqw.pong2.data.UserData;
 import io.github.sdxqw.pong2.font.Font;
 import io.github.sdxqw.pong2.input.InputManager;
@@ -9,12 +10,12 @@ import io.github.sdxqw.pong2.score.Score;
 import io.github.sdxqw.pong2.server.PongServer;
 import io.github.sdxqw.pong2.states.*;
 import io.github.sdxqw.pong2.utils.Utils;
-import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.opengl.GL;
 
 import static io.github.sdxqw.pong2.utils.Utils.loadImage;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVGGL3.*;
@@ -25,25 +26,18 @@ public class PongGame {
     public static final int WINDOW_WIDTH = 1280;
     public static final int WINDOW_HEIGHT = 720;
     private static final String WINDOW_TITLE = "Pong 2";
-
-    public String userName = "Loading User Name...";
-
-    public long window;
+    public InputManager inputManager;
+    public GameState currentState;
+    public KeyListState keyListState;
+    public UserData userData;
+    public PongServer server;
+    public Score score;
+    public boolean isGamePaused = false;
     public long vg;
     public Font font;
-    public Score score;
-    public InputManager inputManager;
-    public boolean isGamePaused = false;
-    public boolean showPauseMenu = true;
-    public PongServer server;
-    public UserData userData;
-    public GameState currentState;
-    public KeyListState keyListState = new KeyListState(this);
-    private Rendering renderer;
+    private long window;
     private FPS fpsCounter;
-    private boolean isGameRunning = false;
     private boolean showFPS = true;
-
     private double lastTime;
 
     public void startGame() {
@@ -51,7 +45,7 @@ public class PongGame {
         lastTime = glfwGetTime();
         currentState = new MainMenuState(this);
 
-        while (isGameRunning && !glfwWindowShouldClose(window)) {
+        while (!glfwWindowShouldClose(window)) {
             double currentTime = glfwGetTime();
             double deltaTime = currentTime - lastTime;
             lastTime = currentTime;
@@ -69,53 +63,24 @@ public class PongGame {
     }
 
     private void initGame() {
-        isGameRunning = true;
-
         try {
             GLFWErrorCallback.createPrint(System.err).set();
             if (!glfwInit()) {
                 throw new IllegalStateException("Unable to initialize GLFW");
             }
-
             createWindow();
             setupCallbacks();
 
             glfwMakeContextCurrent(window);
             GL.createCapabilities();
 
-            vg = nvgCreate(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
-            if (vg == NULL) {
-                throw new RuntimeException("Failed to create NanoVG context");
-            }
+            initNanoVG();
 
             glfwShowWindow(window);
 
-            score = new Score();
-            fpsCounter = new FPS(0.4f);
-            renderer = new Rendering();
-            font = new Font(vg, "pixel");
-            inputManager = new InputManager(window);
+            initialize();
 
-            server = new PongServer(this);
-
-            userData = new UserData();
-            userData.loadSessionID();
-
-            Thread loadDataThread = new Thread(() -> {
-                server.loadSessionFromDatabase(this, userData.getSessionID());
-                // Generate a new session ID if it is null
-                if (userData.getSessionID() == null) {
-                    server.handleNoSessionID(this);
-                }
-            });
-            loadDataThread.start();
-
-
-            GLFWImage.Buffer iconBuffer = loadImage("textures/image/icon.png");
-            glfwSetWindowIcon(window, iconBuffer);
-
-            // Load other resources such as images and fonts here
-
+            setWindowIcon();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,8 +88,8 @@ public class PongGame {
         lastTime = glfwGetTime();
     }
 
-
     private void createWindow() {
+        Logger.info("Creating window...");
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
         glfwWindowHint(GLFW_SAMPLES, 4);
@@ -134,20 +99,32 @@ public class PongGame {
         if (window == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
+
+        Logger.info("Window created");
+    }
+
+    private void initNanoVG() {
+        Logger.info("Initializing NanoVG...");
+        vg = nvgCreate(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
+        if (vg == NULL) {
+            throw new RuntimeException("Failed to create NanoVG context");
+        }
+        Logger.info("NanoVG initialized");
+    }
+
+    private void setWindowIcon() {
+        Logger.info("Setting window icon...");
+        GLFWImage.Buffer iconBuffer = loadImage("textures/image/icon.png");
+        glfwSetWindowIcon(window, iconBuffer);
+        Logger.info("Window icon set");
     }
 
     private void renderGame() {
-        glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        prepareRendering();
 
         nvgBeginFrame(vg, WINDOW_WIDTH, WINDOW_HEIGHT, 1.0f);
 
-        currentState.render(renderer, vg);
+        currentState.render(new Rendering(), vg);
 
         if (showFPS) {
             String fps = String.format("FPS: %.0f", fpsCounter.getFPS());
@@ -155,6 +132,21 @@ public class PongGame {
         }
 
         nvgEndFrame(vg);
+
+        finishRendering();
+    }
+
+    private void prepareRendering() {
+        glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    private void finishRendering() {
         glDisable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
     }
@@ -164,13 +156,14 @@ public class PongGame {
     }
 
     private void setupCallbacks() {
+        Logger.info("Setting up callbacks...");
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (currentState instanceof MainMenuState)
                 ((MainMenuState) currentState).onKeyPressed(key, action);
 
             if (inputManager.isKeyPressed(keyListState.getValueByIndex(8))) {
                 if (!(currentState instanceof PauseState) && !(currentState instanceof MainMenuState)
-                        && !(currentState instanceof KeyListState) && !(currentState instanceof TopListState) && !(currentState instanceof GameModeState) && showPauseMenu) {
+                        && !(currentState instanceof KeyListState) && !(currentState instanceof TopListState) && !(currentState instanceof GameModeState)) {
                     isGamePaused = true;
                     changeState(new PauseState(this, (PlayState) currentState));
                 }
@@ -208,27 +201,42 @@ public class PongGame {
             if (inputManager.isKeyPressed(keyListState.getValueByIndex(2)))
                 showFPS = !showFPS;
         });
+        Logger.info("Callbacks set");
     }
 
     public void endGame() {
-        isGameRunning = false;
-
-        // Save session ID to JSON
+        Logger.info("Ending game...");
         userData.saveSessionID();
-
-        // Save session data to the database
-        server.saveSessionToDatabase(userName, score, userData.getSessionID());
-
+        server.saveHighestScore(userData.getSessionID(), score.getHighestPlayer1Score());
         server.closeConnection();
-        Callbacks.glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
-        nvgDelete(vg);
-        glfwTerminate();
-        window = NULL;
-        vg = NULL;
+        cleanup();
+        Logger.info("Game ended");
         System.exit(0);
     }
 
+    private void cleanup() {
+        Logger.info("Cleaning up...");
+        glfwFreeCallbacks(window);
+        glfwDestroyWindow(window);
+        nvgDelete(vg);
+        glfwTerminate();
+        Logger.info("Cleaned up");
+    }
+
+    public void initialize() {
+        Logger.info("Initializing game...");
+        score = new Score();
+        font = new Font(vg, "pixel");
+        inputManager = new InputManager(window);
+        keyListState = new KeyListState(this);
+        fpsCounter = new FPS(0.2f);
+        userData = new UserData();
+        userData.loadSessionID();
+        server = new PongServer(this);
+        server.getUserName(userData.getSessionID());
+        server.getHighestScore(userData.getSessionID());
+        Logger.info("Game initialized");
+    }
 
     public void changeState(GameState nextState) {
         currentState = nextState;

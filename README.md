@@ -8,16 +8,16 @@ We invite you to try out the Pong game developed with LWJGL 3 and NanoVG and exp
 Get ready for an engaging gameplay experience, press "P" to unleash the magic.
 
 # Screenshots
-![image](https://github.com/sdxqw/pong2/assets/94248011/8889ef80-a25d-40e3-99a1-33831492e179)
-![image](https://github.com/sdxqw/pong2/assets/94248011/0dcec349-be49-456c-ac85-e2049803c9d8)
-![image](https://github.com/sdxqw/pong2/assets/94248011/5153ac58-5888-4088-99de-7287ac7e27c8)
-![image](https://github.com/sdxqw/pong2/assets/94248011/bb925f47-b038-426d-ad60-894f63397f5a)
-![image](https://github.com/sdxqw/pong2/assets/94248011/f9a4d00f-a0cc-49e3-a2ef-56624b374abd)
-![image](https://github.com/sdxqw/pong2/assets/94248011/c71056cf-8474-4419-ad60-fbe547611902)
+![image](https://github.com/sdxqw/pong2/assets/94248011/a2986b04-82c0-40d1-bd49-5a1e35a99f47)
+![image](https://github.com/sdxqw/pong2/assets/94248011/2c28dae4-91ec-4138-b91d-6fb4dab41694)
+![image](https://github.com/sdxqw/pong2/assets/94248011/d2962cdb-fae3-4074-a19f-8a84e2071623)
+![image](https://github.com/sdxqw/pong2/assets/94248011/d9b40210-2e50-4da9-a68d-1e1f08f06ad9)
+![image](https://github.com/sdxqw/pong2/assets/94248011/8ff45a73-8a09-4ab3-adff-4d0be8d115fb)
+![image](https://github.com/sdxqw/pong2/assets/94248011/9d64a7e3-ac86-4718-b4c6-0542fd6ff71d)
 
 ## If database is OFF
-![image](https://github.com/sdxqw/pong2/assets/94248011/4d907776-a771-407c-9878-2ffd0eab1958)
-![image](https://github.com/sdxqw/pong2/assets/94248011/a68a3d54-b02b-45be-b0c7-b24ac11ebba0)
+![image](https://github.com/sdxqw/pong2/assets/94248011/9dca5773-5d21-4464-ae7b-5ca914faf04d)
+![image](https://github.com/sdxqw/pong2/assets/94248011/23cf63b3-0810-4d63-a013-10f9d85ae69d)
 
 # Key Features:
 

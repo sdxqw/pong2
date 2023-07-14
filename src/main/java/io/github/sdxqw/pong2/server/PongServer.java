@@ -13,9 +13,9 @@ public class PongServer {
     private static final String DB_URL = "jdbc:mariadb://localhost:3306/pong";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "123";
+    public String oldUsername = null;
     private Connection connection;
     private boolean initialConnectionAttempt = false;
-    public String oldUsername = null;
 
     public PongServer(PongGame game) {
         Thread threadConnection = new Thread(this::connectToDatabase);
@@ -87,6 +87,7 @@ public class PongServer {
 
         return null;
     }
+
     public void closeConnection() {
         try {
             synchronized (this) {

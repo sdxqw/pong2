@@ -16,12 +16,11 @@ public class PlayState extends GameState {
     public final Ball ball;
     private final Paddle player1;
     private final Paddle player2;
+    private final GameModeState gameModeState;
     private double blinkTimer = 0;
     private boolean isTextVisible = true;
     private float deltaTime;
     private boolean isGameTerminated;
-
-    private final GameModeState gameModeState;
 
 
     public PlayState(PongGame game, GameModeState gameModeState) {

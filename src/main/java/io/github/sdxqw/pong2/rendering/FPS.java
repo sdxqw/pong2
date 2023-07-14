@@ -1,9 +1,9 @@
 package io.github.sdxqw.pong2.rendering;
 
 public class FPS {
+    private final float updateInterval;
     private int frameCount;
     private float fps;
-    private final float updateInterval;
     private float elapsed;
 
     public FPS(float updateInterval) {

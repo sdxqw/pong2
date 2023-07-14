@@ -14,8 +14,6 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.opengl.GL;
 
-import java.util.UUID;
-
 import static io.github.sdxqw.pong2.utils.Utils.loadImage;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nanovg.NanoVG.*;
@@ -39,9 +37,9 @@ public class PongGame {
     public boolean showPauseMenu = true;
     public PongServer server;
     public UserData userData;
-    private Rendering renderer;
     public GameState currentState;
     public KeyListState keyListState = new KeyListState(this);
+    private Rendering renderer;
     private FPS fpsCounter;
     private boolean isGameRunning = false;
     private boolean showFPS = true;

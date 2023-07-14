@@ -3,7 +3,6 @@ package io.github.sdxqw.pong2.rendering;
 import io.github.sdxqw.pong2.PongGame;
 import io.github.sdxqw.pong2.font.Font;
 import io.github.sdxqw.pong2.utils.Utils;
-import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
 
 import java.util.List;
@@ -13,9 +12,9 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_BOTTOM;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 public class Button {
+    private final PongGame game;
     public float x;
     public float y;
-
     public int fontSize;
     public int id;
     public float width;
@@ -23,9 +22,8 @@ public class Button {
     public String text;
     public int selectedButtonIndex;
     private Runnable onActivated;
-    private final PongGame game;
 
-    public Button(PongGame game, int id, float x, float y, float width, float height, String text, int fontSize, NVGColor color, NVGColor colored) {
+    public Button(PongGame game, int id, float x, float y, float width, float height, String text, int fontSize) {
         this.game = game;
         this.id = id;
         this.x = x;

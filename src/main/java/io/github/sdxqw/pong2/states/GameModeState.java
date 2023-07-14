@@ -155,7 +155,7 @@ public class GameModeState extends GameState {
         private final NVGColor color2;
 
         public ButtonMode(PongGame game, int id, float x, float y, float width, float height, String text, int fontSize, NVGColor color, NVGColor color2) {
-            super(game, id, x, y, width, height, text, fontSize, Utils.color(0.0f, 1f, 0.0f, 1f), Utils.color(0.0f, 0.5f, 0.0f, 1f));
+            super(game, id, x, y, width, height, text, fontSize);
             this.color = color;
             this.color2 = color2;
 

@@ -153,6 +153,8 @@ public class PongGame {
 
     private void updateGame(double deltaTime) {
         currentState.update(deltaTime);
+
+        server.saveHighestScore(userData.getSessionID(), score.getHighestPlayer1Score());
     }
 
     private void setupCallbacks() {
@@ -207,7 +209,6 @@ public class PongGame {
     public void endGame() {
         Logger.info("Ending game...");
         userData.saveSessionID();
-        server.saveHighestScore(userData.getSessionID(), score.getHighestPlayer1Score());
         server.closeConnection();
         cleanup();
         Logger.info("Game ended");

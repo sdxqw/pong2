@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'io.github.sdxqw'
-version = '1.0-SNAPSHOT'
+version = '1.1-SNAPSHOT'
 
 project.ext.lwjglVersion = "3.3.2"
 project.ext.jomlVersion = "1.10.5"

@@ -19,6 +19,9 @@ Get ready for an engaging gameplay experience, press "P" to unleash the magic.
 ![image](https://github.com/sdxqw/pong2/assets/94248011/9dca5773-5d21-4464-ae7b-5ca914faf04d)
 ![image](https://github.com/sdxqw/pong2/assets/94248011/23cf63b3-0810-4d63-a013-10f9d85ae69d)
 
+# Set database
+To set up your database, you will require a MariaDB SQL server hosted locally on port 3306. The server should be accessed with the username "root" and password "123". The table within the database should be named "Users," and it should consist of the following columns: session_id (varchar(255)), username (varchar(255)), and highest_scores (varchar(255)). By configuring your database as described, the Pong2 game will be able to connect to it effortlessly. However, if you wish to make modifications, please refer to the PongServer code and make changes only if you possess a good understanding of how SQL queries work.
+
 # Key Features:
 
 1. Built using LWJGL 3 and NanoVG for efficient and cross-platform game development.

@@ -48,15 +48,6 @@ public class Paddle {
         }
     }
 
-    public boolean isColliding(float ballX, float ballY, float ballWidth, float ballHeight) {
-        float ballRight = ballX + ballWidth;
-        float ballBottom = ballY + ballHeight;
-        float paddleRight = position.x + width;
-        float paddleBottom = position.y + height;
-
-        return position.x < ballRight && paddleRight > ballX && position.y < ballBottom && paddleBottom > ballY;
-    }
-
     public void resetPlayerPosition() {
         position.x = 20;
         position.y = 50;

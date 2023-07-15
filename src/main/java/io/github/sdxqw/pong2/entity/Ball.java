@@ -59,7 +59,7 @@ public class Ball {
                 direction.y *= -1; // Reflect the y-direction
             }
 
-            if (isCollidingWithPlayer(newPosition) || isCollidingWithPlayer2(newPosition)) {
+            if (isCollidingWithPlayer(newPosition) || isCollidingWithBot(newPosition)) {
                 direction.x *= -1;
             }
 
@@ -106,11 +106,30 @@ public class Ball {
     }
 
     private boolean isCollidingWithPlayer(Vector2f newPosition) {
-        return player.isColliding(newPosition.x, newPosition.y, width, height);
+        return isColliding(newPosition, player);
     }
 
-    private boolean isCollidingWithPlayer2(Vector2f newPosition) {
-        return bot.isColliding(newPosition.x, newPosition.y, width, height);
+    private boolean isCollidingWithBot(Vector2f newPosition) {
+        return isColliding(newPosition, bot);
+    }
+
+    private boolean isColliding(Vector2f newPosition, Paddle bot) {
+        float ballRight = newPosition.x + width;
+        float ballBottom = newPosition.y + height;
+        float paddleRight = bot.getPosition().x + bot.getWidth();
+        float paddleBottom = bot.getPosition().y + bot.getHeight();
+
+        if (newPosition.x < paddleRight && ballRight > bot.getPosition().x &&
+                newPosition.y < paddleBottom && ballBottom > bot.getPosition().y) {
+            if (newPosition.x < paddleRight - bot.getWidth() / 2) {
+                newPosition.x = bot.getPosition().x - width;
+            } else {
+                newPosition.x = paddleRight;
+            }
+            return true;
+        }
+
+        return false;
     }
 
     private float getRandomDirection() {

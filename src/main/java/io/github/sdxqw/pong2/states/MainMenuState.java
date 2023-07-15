@@ -64,7 +64,7 @@ public class MainMenuState extends GameState {
             game.font.drawText(game.userData.getHighScore(), NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 140, 25, Utils.color(0.1f, 0.4f, 0.2f, 0.6f));
         } else {
             game.font.drawText(game.userData.getUserName(), NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 170, 25, Utils.color(0.6f, 0.2f, 0.4f, 0.6f));
-            game.font.drawText(game.userData.getHighScore(), NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 140, 25, Utils.color(0.4f, 0.2f, 0.3f, 0.6f));
+            game.font.drawText(String.valueOf(game.score.getHighestPlayer1Score()), NVG_ALIGN_CENTER | NVG_ALIGN_LEFT, (float) WINDOW_WIDTH / 2 - 620, (float) WINDOW_HEIGHT / 2 - 140, 25, Utils.color(0.4f, 0.2f, 0.3f, 0.6f));
             dbRed.render((float) WINDOW_WIDTH / 2 - 422, (float) WINDOW_HEIGHT / 2 - 237, 31, 37.5f, new float[]{1f, 1f, 1f, 1f});
         }
 

@@ -74,7 +74,7 @@ public class MainMenuState extends GameState {
     }
 
     @Override
-    public void update(double deltaTime) {
+    public void update(float deltaTime) {
     }
 
     public void onKeyPressed(int key, int action) {

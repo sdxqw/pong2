@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.joml.Vector2f;
 
+import java.awt.*;
 import java.util.Random;
 
 @Getter
@@ -38,7 +39,7 @@ public class Ball {
         this.random = new Random();
     }
 
-    public void moveBall(float windowHeight, float windowWidth, double deltaTime) {
+    public void moveBall(float windowHeight, float windowWidth, float deltaTime) {
         if (!hasBallSpawned) {
             spawnBall(windowWidth, windowHeight);
         } else {
@@ -61,6 +62,21 @@ public class Ball {
 
             if (isCollidingWithPlayer(newPosition) || isCollidingWithBot(newPosition)) {
                 direction.x *= -1;
+                // Adjust ball position to prevent it from sticking inside the paddle
+                if (isCollidingWithPlayer(newPosition)) {
+                    float paddleRight = player.getPosition().x + player.getWidth();
+                    if (newPosition.x < paddleRight - player.getWidth() / 2)
+                        newPosition.x = player.getPosition().x - width;
+                    else
+                        newPosition.x = paddleRight;
+                }
+                if (isCollidingWithBot(newPosition)) {
+                    float paddleLeft = bot.getPosition().x;
+                    if (newPosition.x + width > paddleLeft + bot.getWidth() / 2)
+                        newPosition.x = bot.getPosition().x + bot.getWidth();
+                    else
+                        newPosition.x = paddleLeft - width;
+                }
             }
 
             position = newPosition;
@@ -106,30 +122,15 @@ public class Ball {
     }
 
     private boolean isCollidingWithPlayer(Vector2f newPosition) {
-        return isColliding(newPosition, player);
+        Rectangle ballRect = new Rectangle((int) newPosition.x, (int) newPosition.y, (int) width, (int) height);
+        Rectangle playerRect = new Rectangle((int) player.getPosition().x, (int) player.getPosition().y, (int) player.getWidth(), (int) player.getHeight());
+        return ballRect.intersects(playerRect);
     }
 
     private boolean isCollidingWithBot(Vector2f newPosition) {
-        return isColliding(newPosition, bot);
-    }
-
-    private boolean isColliding(Vector2f newPosition, Paddle bot) {
-        float ballRight = newPosition.x + width;
-        float ballBottom = newPosition.y + height;
-        float paddleRight = bot.getPosition().x + bot.getWidth();
-        float paddleBottom = bot.getPosition().y + bot.getHeight();
-
-        if (newPosition.x < paddleRight && ballRight > bot.getPosition().x &&
-                newPosition.y < paddleBottom && ballBottom > bot.getPosition().y) {
-            if (newPosition.x < paddleRight - bot.getWidth() / 2) {
-                newPosition.x = bot.getPosition().x - width;
-            } else {
-                newPosition.x = paddleRight;
-            }
-            return true;
-        }
-
-        return false;
+        Rectangle ballRect = new Rectangle((int) newPosition.x, (int) newPosition.y, (int) width, (int) height);
+        Rectangle botRect = new Rectangle((int) bot.getPosition().x, (int) bot.getPosition().y, (int) bot.getWidth(), (int) bot.getHeight());
+        return ballRect.intersects(botRect);
     }
 
     private float getRandomDirection() {

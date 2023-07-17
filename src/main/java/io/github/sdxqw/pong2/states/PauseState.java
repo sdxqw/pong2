@@ -53,7 +53,7 @@ public class PauseState extends GameState {
     }
 
     @Override
-    public void update(double deltaTime) {
+    public void update(float deltaTime) {
         if (!isPaused) {
             playState.update(deltaTime);
         }

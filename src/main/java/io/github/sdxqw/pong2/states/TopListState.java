@@ -15,9 +15,9 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 public class TopListState extends GameState {
     private final List<String> allPlayers;
     private final List<String> allHighestScores;
-    private double blinkTimer = 0;
+    private float blinkTimer = 0;
     private boolean isTextVisible = true;
-    private double deltaTime;
+    private float deltaTime;
 
     public TopListState(PongGame game) {
         super(game);
@@ -87,7 +87,7 @@ public class TopListState extends GameState {
     }
 
     @Override
-    public void update(double deltaTime) {
+    public void update(float deltaTime) {
         this.deltaTime = deltaTime;
     }
 }

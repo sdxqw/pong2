@@ -34,28 +34,28 @@ public class PlayState extends GameState {
             player1.setSpeed(gameModeState.mode.getSpeedPlayer());
             player2.setSpeed(gameModeState.mode.getSpeedPlayer());
             ball.setSpeed(gameModeState.mode.getSpeedBall());
-            game.score.resetScore();
+            resetGame();
         }
 
         if (gameModeState.mode == TypeModes.NORMAL) {
             player1.setSpeed(gameModeState.mode.getSpeedPlayer());
             player2.setSpeed(gameModeState.mode.getSpeedPlayer());
             ball.setSpeed(gameModeState.mode.getSpeedBall());
-            game.score.resetScore();
+            resetGame();
         }
 
         if (gameModeState.mode == TypeModes.HARD) {
             player1.setSpeed(gameModeState.mode.getSpeedPlayer());
             player2.setSpeed(gameModeState.mode.getSpeedPlayer());
             ball.setSpeed(gameModeState.mode.getSpeedBall());
-            game.score.resetScore();
+            resetGame();
         }
 
         if (gameModeState.mode == TypeModes.ULTIMATE) {
             player1.setSpeed(gameModeState.mode.getSpeedPlayer());
             player2.setSpeed(gameModeState.mode.getSpeedPlayer());
             ball.setSpeed(gameModeState.mode.getSpeedBall());
-            game.score.resetScore();
+            resetGame();
         }
     }
 
@@ -78,7 +78,7 @@ public class PlayState extends GameState {
     }
 
     @Override
-    public void update(double deltaTime) {
+    public void update(float deltaTime) {
         if (game.inputManager.isKeyPressed(game.keyListState.getValueByIndex(10)))
             isGameTerminated = true;
 
@@ -89,7 +89,7 @@ public class PlayState extends GameState {
             game.score.player1Scores.add(game.score.getPlayer1Score());
         }
 
-        this.deltaTime = (float) deltaTime;
+        this.deltaTime = deltaTime;
     }
 
     public void drawWin() {
@@ -130,7 +130,7 @@ public class PlayState extends GameState {
                     Utils.color(1f, 1f, 1f, 1f));
 
             blinkTimer += deltaTime;
-            if (blinkTimer >= 0.25f) {
+            if (blinkTimer >= 0.3f) {
                 isTextVisible = !isTextVisible;
                 blinkTimer = 0;
             }

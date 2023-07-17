@@ -3,8 +3,8 @@ package io.github.sdxqw.pong2.rendering;
 public class FPS {
     private final float updateInterval;
     private int frameCount;
-    private float fps;
     private float elapsed;
+    private float fps;
 
     public FPS(float updateInterval) {
         this.updateInterval = updateInterval;
@@ -27,6 +27,7 @@ public class FPS {
 
     private void reset() {
         frameCount = 0;
-        elapsed = 0.0f;
+        elapsed = 0;
     }
 }
+

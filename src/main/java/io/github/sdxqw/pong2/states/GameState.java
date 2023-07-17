@@ -12,5 +12,5 @@ public abstract class GameState {
 
     public abstract void render(Rendering renderer, long vg);
 
-    public abstract void update(double deltaTime);
+    public abstract void update(float deltaTime);
 }

@@ -34,12 +34,12 @@ public class Paddle {
         }
     }
 
-    public void moveBotPaddle(float windowHeight, double deltaTime, Ball ball) {
+    public void moveBotPaddle(float windowHeight, float deltaTime, Ball ball) {
         float paddleCenterY = position.y + height / 2;
         float ballCenterY = ball.getPosition().y + ball.getHeight() / 2;
         float errorOffset = (float) (Math.random() * 100) - 50;
         ballCenterY += errorOffset;
-        float maxMovementSpeed = (float) (speed * deltaTime * 0.7f);
+        float maxMovementSpeed = speed * deltaTime * 0.7f;
 
         if (paddleCenterY < ballCenterY && position.y + height + maxMovementSpeed < windowHeight) {
             position.y += Math.min(maxMovementSpeed, ballCenterY - paddleCenterY);

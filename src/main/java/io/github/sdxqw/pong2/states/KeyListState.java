@@ -22,7 +22,7 @@ public class KeyListState extends GameState {
     public boolean isFirstEnter = true;
     private double blinkTimer = 0;
     private boolean isTextVisible = true;
-    private double deltaTime;
+    private float deltaTime;
     private int selectedIndex = 0;
     private boolean isAwaitingNewKey = false;
     private boolean alreadyBound = false;
@@ -236,7 +236,7 @@ public class KeyListState extends GameState {
 
 
     @Override
-    public void update(double deltaTime) {
+    public void update(float deltaTime) {
         this.deltaTime = deltaTime;
     }
 }

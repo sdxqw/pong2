@@ -140,8 +140,8 @@ public class GameModeState extends GameState {
     }
 
     @Override
-    public void update(double deltaTime) {
-        this.deltaTime = (float) deltaTime;
+    public void update(float deltaTime) {
+        this.deltaTime = deltaTime;
     }
 
 

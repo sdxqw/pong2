@@ -38,25 +38,25 @@ public class PongGame {
     private long window;
     private FPS fpsCounter;
     private boolean showFPS = true;
-    private double lastTime;
 
     public void startGame() {
         initGame();
-        lastTime = glfwGetTime();
+        double lastTime = glfwGetTime();
         currentState = new MainMenuState(this);
 
         while (!glfwWindowShouldClose(window)) {
             double currentTime = glfwGetTime();
-            double deltaTime = currentTime - lastTime;
-            lastTime = currentTime;
+            float deltaTime = (float) (currentTime - lastTime);
 
             renderGame();
             updateGame(deltaTime);
 
-            fpsCounter.update((float) deltaTime);
+            fpsCounter.update(deltaTime);
 
             glfwSwapBuffers(window);
             glfwPollEvents();
+
+            lastTime = currentTime;
         }
 
         endGame();
@@ -84,8 +84,6 @@ public class PongGame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        lastTime = glfwGetTime();
     }
 
     private void createWindow() {
@@ -151,7 +149,7 @@ public class PongGame {
         glEnable(GL_DEPTH_TEST);
     }
 
-    private void updateGame(double deltaTime) {
+    private void updateGame(float deltaTime) {
         currentState.update(deltaTime);
     }
 

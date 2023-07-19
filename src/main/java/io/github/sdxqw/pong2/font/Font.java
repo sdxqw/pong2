@@ -1,6 +1,5 @@
 package io.github.sdxqw.pong2.font;
 
-import io.github.sdxqw.pong2.utils.Utils;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGTextRow;
 import org.lwjgl.system.MemoryStack;
@@ -9,9 +8,6 @@ import org.lwjgl.system.MemoryUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
@@ -26,35 +22,20 @@ public class Font {
         loadFont();
     }
 
-    private void loadFont() {
-        InputStream fontInputStream = null;
-        try {
-            fontInputStream = Utils.class.getResourceAsStream("/textures/fonts/" + fontName + ".ttf");
-            if (fontInputStream == null) {
-                throw new IOException("Font file not found: " + fontName);
-            }
-
-            Path tempFontFile = Files.createTempFile(fontName, ".ttf");
-            Files.copy(fontInputStream, tempFontFile, StandardCopyOption.REPLACE_EXISTING);
-
-            String fontPath = tempFontFile.toAbsolutePath().toString();
-            ByteBuffer fontPathData = MemoryUtil.memUTF8(fontPath);
+    public void loadFont() {
+        String fontFilePath = "textures/fonts/" + fontName + ".ttf";
+        try (InputStream inputStream = Font.class.getClassLoader().getResourceAsStream(fontFilePath)) {
+            assert inputStream != null : "Error: Could not open file for font: '" + fontName + "'";
+            byte[] fontData = inputStream.readAllBytes();
+            ByteBuffer fontDataBuffer = MemoryUtil.memAlloc(fontData.length + 1);
+            fontDataBuffer.put(fontData).put((byte) 0).flip();
 
             ByteBuffer fontNameData = MemoryUtil.memUTF8(fontName);
-
-            if (nvgCreateFont(nvg, fontNameData, fontPathData) == -1) {
+            if (nvgCreateFontMem(nvg, fontNameData, fontDataBuffer, true) == -1) {
                 throw new IOException("Failed to load font: " + fontName);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (fontInputStream != null) {
-                try {
-                    fontInputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
